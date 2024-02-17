@@ -125,7 +125,7 @@ export class Simulation {
     static instance;
     bodies = [];
     startTime;
-    timeStepSec = 0.0001;
+    timeStepSec = 1;
     constructor() {
         this.startTime = Date.now();
     }

@@ -189,7 +189,7 @@ export class Simulation {
     private static instance: Simulation;
     private bodies: DynamicBody[] = [];
     private startTime: number;
-    private timeStepSec = 0.0001;
+    private timeStepSec = 1;
 
     private constructor() { 
         this.startTime = Date.now();
