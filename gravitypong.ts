@@ -139,6 +139,8 @@ export class DynamicBody {
         this.pos.add(this.vel.mul(dt), true);
         this.vel.add(this.acc.mul(dt), true);
         this.acc = Vec2.zero;
+
+        console.log([this.pos.x, this.pos.y]);
     }
 }
 
