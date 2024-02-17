@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Simulation = exports.DynamicBody = exports.Vec2 = void 0;
 function maxOf(...ns) {
     return Math.max(...ns);
 }
 function clamp(n, min = Number.EPSILON) {
     return maxOf(n, min);
 }
-class Vec2 {
+export class Vec2 {
     constructor(x, y) {
         this.components = [x, y];
     }
@@ -69,8 +66,7 @@ class Vec2 {
         return new Vec2(0, 0);
     }
 }
-exports.Vec2 = Vec2;
-class DynamicBody {
+export class DynamicBody {
     constructor(m, r, pos = Vec2.zero, vel = Vec2.zero) {
         this.m = m;
         this.radius = r;
@@ -85,7 +81,6 @@ class DynamicBody {
         console.log([this.pos.x, this.pos.y]);
     }
 }
-exports.DynamicBody = DynamicBody;
 function updateAcceleration1(bodies) {
     for (const [i, b1] of bodies.entries()) {
         for (const [j, b2] of bodies.entries()) {
@@ -120,7 +115,7 @@ function updateAcceleration2(bodies) {
         }
     }
 }
-class Simulation {
+export class Simulation {
     constructor() {
         this.bodies = [];
         this.timeStepSec = 0.0001;
@@ -152,4 +147,3 @@ class Simulation {
         return Date.now() - this.startTime;
     }
 }
-exports.Simulation = Simulation;
