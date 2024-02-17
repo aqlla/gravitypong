@@ -1,4 +1,4 @@
-import { Simulation, DynamicBody, Vec2 } from './gravitypong';
+import { Simulation, DynamicBody, Vec2 } from './gravitypong.js';
 
 
 const s = Simulation.getInstance();
