@@ -5,6 +5,7 @@ function clamp(n, min = Number.EPSILON) {
     return maxOf(n, min);
 }
 export class Vec2 {
+    components;
     constructor(x, y) {
         this.components = [x, y];
     }
@@ -67,6 +68,11 @@ export class Vec2 {
     }
 }
 export class DynamicBody {
+    m;
+    radius;
+    pos;
+    vel;
+    acc;
     constructor(m, r, pos = Vec2.zero, vel = Vec2.zero) {
         this.m = m;
         this.radius = r;
@@ -116,9 +122,11 @@ function updateAcceleration2(bodies) {
     }
 }
 export class Simulation {
+    static instance;
+    bodies = [];
+    startTime;
+    timeStepSec = 0.0001;
     constructor() {
-        this.bodies = [];
-        this.timeStepSec = 0.0001;
         this.startTime = Date.now();
     }
     static getInstance() {
