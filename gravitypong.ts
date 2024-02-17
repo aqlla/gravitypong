@@ -24,7 +24,7 @@ type VectorFn<TLhs = VectorMathOperand, TRhs = VectorMathOperand>
 type ScalarFn<TLhs = VectorMathOperand, TRhs 
     = VectorMathOperand> = NDimFn<TLhs, TRhs, number>;
     
-class Vec2 {
+export class Vec2 {
     private components: [number, number];
 
     constructor(x: number, y: number) {
@@ -120,12 +120,20 @@ interface IBody {
     acc: Vec2;
 }
 
-class DynamicBody {
+export class DynamicBody {
     m: number;
     radius: number;
     pos: Vec2;
     vel: Vec2;
     acc: Vec2;
+
+    constructor(m: number, r: number, pos: Vec2 = Vec2.zero, vel: Vec2 = Vec2.zero) {
+        this.m = m;
+        this.radius = r;
+        this.pos = pos;
+        this.vel = vel;
+        this.acc = Vec2.zero;
+    }
     
     public integrate(dt: number) {
         this.pos.add(this.vel.mul(dt), true);
@@ -175,11 +183,11 @@ function updateAcceleration2(bodies: IBody[]) {
     }
 }
 
-class Simulation {
+export class Simulation {
     private static instance: Simulation;
-    private bodies: DynamicBody[];
+    private bodies: DynamicBody[] = [];
     private startTime: number;
-    private timeStep: 0.000001;
+    private timeStepSec = 0.0001;
 
     private constructor() { 
         this.startTime = Date.now();
@@ -193,13 +201,21 @@ class Simulation {
         return Simulation.instance;
     }
 
+    public addBody(body: DynamicBody) {
+        this.bodies.push(body);
+    }
+
+    public run() {
+        setInterval(this.update, this.timeStepSec * 1000);
+    }
+
     public update() {
         updateAcceleration2(this.bodies);
     }
 
     public updateDerivatives() {
         for (const b of this.bodies)
-            b.integrate(this.timeStep);
+            b.integrate(this.timeStepSec);
     }
 
     public get bodyCount(): number {

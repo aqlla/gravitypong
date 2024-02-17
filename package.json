@@ -1,0 +1,28 @@
+{
+  "name": "gravitypong",
+  "version": "1.0.0",
+  "description": "2D n-body sim",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aqlla/gravitypong.git"
+  },
+  "author": "acsherrock@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aqlla/gravitypong/issues"
+  },
+  "homepage": "https://github.com/aqlla/gravitypong#readme",
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@types/p5": "^1.7.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "p5": "^1.9.0"
+  }
+}
