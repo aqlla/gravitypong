@@ -1,4 +1,4 @@
-import { Vec2GenericBase, VectorFn, VectorMathOperand } from "./vector_generic";
+import { Vec2GenericBase, VectorFn, VectorMathOperand } from "./vector_generic.js";
 
     
 export class Vec2 extends Vec2GenericBase<number> {

@@ -1,6 +1,6 @@
-import { GameLoopBase } from "./gameloop";
-import { Vec2 } from "./vector";
-import { clamp } from "./util";
+import { GameLoopBase } from "./gameloop.js";
+import { Vec2 } from "./vector.js";
+import { clamp } from "./util.js";
 import p5 from "p5";
 
 function updateAcceleration1(bodies: IBody[]) {

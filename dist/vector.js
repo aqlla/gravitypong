@@ -1,4 +1,4 @@
-import { Vec2GenericBase } from "./vector_generic";
+import { Vec2GenericBase } from "./vector_generic.js";
 export class Vec2 extends Vec2GenericBase {
     add(other, update = false) {
         const fn = (l, r) => [l.x + r.x, l.y + r.y];
