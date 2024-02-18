@@ -49,7 +49,7 @@ export class Vec2GenericBase<TNum = number> implements IOrderedPair<TNum> {
             fn: VectorFn<TThis, TOther, TNum>, //(lhs: Vec2GenericBase<TNum>, rhs: TOther) => [TNum, TNum], 
             self: TThis,
             other: TOther, 
-            update: boolean = false): Vec2GenericBase<TNum> {
+            update: boolean = false): this {
 
         const components = fn(self, other);
 

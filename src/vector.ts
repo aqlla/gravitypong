@@ -6,25 +6,25 @@ export class Vec2 extends Vec2GenericBase<number> {
     public add(other: Vec2, update: boolean = false): Vec2 {
         const fn: VectorFn<Vec2, Vec2>
             = (l, r) => [l.x + r.x, l.y + r.y];
-        return this.applyArithmetic(fn, this, other, update) as Vec2;
+        return this.applyArithmetic(fn, this, other, update);
     }
 
     public sub(other: Vec2, update: boolean = false): Vec2 {
         const fn: VectorFn<Vec2, Vec2>
             = (l, r) => [l.x - r.x, l.y - r.y];
-        return this.applyArithmetic(fn, this, other, update) as Vec2;
+        return this.applyArithmetic(fn, this, other, update);
     }
 
     public mul(other: number, update: boolean = false): Vec2 {
         const fn: VectorFn<Vec2, number>
             = (l, r) => [l.x * r, l.y * r];
-        return this.applyArithmetic(fn, this, other, update) as Vec2;
+        return this.applyArithmetic(fn, this, other, update);
     }
 
     public div(other: number, update: boolean = false): Vec2 {
         const fn: VectorFn<Vec2, number>
             = (l, r) => [l.x / r, l.y / r];
-        return this.applyArithmetic(fn, this, other, update) as Vec2;
+        return this.applyArithmetic(fn, this, other, update);
     }
 
     public cross(other: Vec2): number {
