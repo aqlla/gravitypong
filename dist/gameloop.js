@@ -1,15 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GameLoopBase = void 0;
-class GameLoopBase {
-    timerId = null;
-    timeStepSec;
-    startTime;
-    _processList = [
-        this.update,
-        this.render
-    ];
+export class GameLoopBase {
     constructor(args) {
+        this.timerId = null;
+        this._processList = [
+            this.update,
+            this.render
+        ];
         this.timeStepSec = args.timeStep;
         this.startTime = Date.now();
     }
@@ -39,4 +34,3 @@ class GameLoopBase {
         return Date.now() - this.startTime;
     }
 }
-exports.GameLoopBase = GameLoopBase;

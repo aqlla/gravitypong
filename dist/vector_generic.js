@@ -1,9 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Vec2GenericBase = void 0;
 // export type TVector2 extends Vec2GenericBase<TNum>
-class Vec2GenericBase {
-    components;
+export class Vec2GenericBase {
     constructor(x, y) {
         this.components = [x, y];
     }
@@ -38,4 +34,3 @@ class Vec2GenericBase {
         return this.x == other.x && this.y == other.y;
     }
 }
-exports.Vec2GenericBase = Vec2GenericBase;
