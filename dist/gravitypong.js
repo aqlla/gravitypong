@@ -37,16 +37,24 @@ function updateAcceleration2(bodies) {
 }
 export class DynamicBody {
     constructor(m, r, pos = Vec2.zero, vel = Vec2.zero) {
+        this._dbg_step = 0;
         this.m = m;
         this.radius = r;
         this.pos = pos;
         this.vel = vel;
         this.acc = Vec2.zero;
     }
+    dbg(message) {
+        if (this._dbg_step++ === 10) {
+            console.log(message);
+            this._dbg_step = 0;
+        }
+    }
     integrate(dt) {
         this.pos.add(this.vel.mul(dt), true);
         this.vel.add(this.acc.mul(dt), true);
         this.acc = Vec2.zero;
+        this.dbg(this.pos.toString());
     }
 }
 export class Simulation extends GameLoopBase {

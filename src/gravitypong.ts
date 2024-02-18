@@ -59,6 +59,8 @@ export class DynamicBody {
     vel: Vec2;
     acc: Vec2;
 
+    private _dbg_step = 0;
+
     constructor(m: number, r: number, pos: Vec2 = Vec2.zero, vel: Vec2 = Vec2.zero) {
         this.m = m;
         this.radius = r;
@@ -66,11 +68,20 @@ export class DynamicBody {
         this.vel = vel;
         this.acc = Vec2.zero;
     }
+
+    private dbg(message: string) {
+        if (this._dbg_step++ === 10) {
+            console.log(message);
+            this._dbg_step = 0;
+        }
+    }
     
     public integrate(dt: number) {
         this.pos.add(this.vel.mul(dt), true);
         this.vel.add(this.acc.mul(dt), true);
         this.acc = Vec2.zero;
+
+        this.dbg(this.pos.toString());
     }
 }
 
