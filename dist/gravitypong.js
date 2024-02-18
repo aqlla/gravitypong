@@ -1,6 +1,9 @@
-import { GameLoopBase } from "./gameloop";
-import { Vec2 } from "./vector";
-import { clamp } from "./util";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Simulation = exports.DynamicBody = void 0;
+const gameloop_1 = require("./gameloop");
+const vector_1 = require("./vector");
+const util_1 = require("./util");
 function updateAcceleration1(bodies) {
     for (const [i, b1] of bodies.entries()) {
         for (const [j, b2] of bodies.entries()) {
@@ -12,7 +15,7 @@ function updateAcceleration1(bodies) {
                 const r = p2.sub(p1);
                 const magSq = r.magnitudeSquared;
                 const mag = Math.sqrt(magSq);
-                const dAcc = r.mul(m2 / (clamp(magSq) * mag));
+                const dAcc = r.mul(m2 / ((0, util_1.clamp)(magSq) * mag));
                 b1.acc = b1.acc.add(dAcc);
             }
         }
@@ -26,7 +29,7 @@ function updateAcceleration2(bodies) {
             const r = b2.pos.sub(b1.pos);
             const magSq = r.magnitudeSquared;
             const mag = Math.sqrt(magSq);
-            const accFactor = r.div(clamp(magSq) * mag);
+            const accFactor = r.div((0, util_1.clamp)(magSq) * mag);
             // get acceleration delta for each body
             const dAcc1 = accFactor.mul(b2.m);
             const dAcc2 = accFactor.mul(b1.m);
@@ -35,26 +38,27 @@ function updateAcceleration2(bodies) {
         }
     }
 }
-export class DynamicBody {
+class DynamicBody {
     m;
     radius;
     pos;
     vel;
     acc;
-    constructor(m, r, pos = Vec2.zero, vel = Vec2.zero) {
+    constructor(m, r, pos = vector_1.Vec2.zero, vel = vector_1.Vec2.zero) {
         this.m = m;
         this.radius = r;
         this.pos = pos;
         this.vel = vel;
-        this.acc = Vec2.zero;
+        this.acc = vector_1.Vec2.zero;
     }
     integrate(dt) {
         this.pos.add(this.vel.mul(dt), true);
         this.vel.add(this.acc.mul(dt), true);
-        this.acc = Vec2.zero;
+        this.acc = vector_1.Vec2.zero;
     }
 }
-export class Simulation extends GameLoopBase {
+exports.DynamicBody = DynamicBody;
+class Simulation extends gameloop_1.GameLoopBase {
     static instance;
     bodies = [];
     constructor() {
@@ -81,3 +85,4 @@ export class Simulation extends GameLoopBase {
         return this.bodies.length;
     }
 }
+exports.Simulation = Simulation;

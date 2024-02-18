@@ -1,4 +1,7 @@
-export class GameLoopBase {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GameLoopBase = void 0;
+class GameLoopBase {
     timerId = null;
     timeStepSec;
     startTime;
@@ -36,3 +39,4 @@ export class GameLoopBase {
         return Date.now() - this.startTime;
     }
 }
+exports.GameLoopBase = GameLoopBase;
