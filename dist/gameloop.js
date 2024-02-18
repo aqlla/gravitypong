@@ -1,10 +1,12 @@
 export class GameLoopBase {
+    timerId = null;
+    timeStepSec;
+    startTime;
+    _processList = [
+        this.update,
+        this.render
+    ];
     constructor(args) {
-        this.timerId = null;
-        this._processList = [
-            this.update,
-            this.render
-        ];
         this.timeStepSec = args.timeStep;
         this.startTime = Date.now();
     }

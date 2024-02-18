@@ -36,6 +36,11 @@ function updateAcceleration2(bodies) {
     }
 }
 export class DynamicBody {
+    m;
+    radius;
+    pos;
+    vel;
+    acc;
     constructor(m, r, pos = Vec2.zero, vel = Vec2.zero) {
         this.m = m;
         this.radius = r;
@@ -50,9 +55,10 @@ export class DynamicBody {
     }
 }
 export class Simulation extends GameLoopBase {
+    static instance;
+    bodies = [];
     constructor() {
         super({ timeStep: 0.1 });
-        this.bodies = [];
     }
     static getInstance() {
         if (!Simulation.instance) {

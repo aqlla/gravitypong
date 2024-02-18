@@ -1,5 +1,6 @@
 // export type TVector2 extends Vec2GenericBase<TNum>
 export class Vec2GenericBase {
+    components;
     constructor(x, y) {
         this.components = [x, y];
     }
