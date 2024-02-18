@@ -1,45 +1,7 @@
 import { GameLoopBase } from "./gameloop";
 import { Vec2 } from "./vector";
-
-function maxOf(...ns: number[]): number {
-    return Math.max(...ns);
-}
-
-function clamp(n: number, min: number = Number.EPSILON): number {
-    return maxOf(n, min);
-}
-
-interface IBody {
-    m: number;
-    radius: number;
-    pos: Vec2;
-    vel: Vec2;
-    acc: Vec2;
-}
-
-export class DynamicBody {
-    m: number;
-    radius: number;
-    pos: Vec2;
-    vel: Vec2;
-    acc: Vec2;
-
-    constructor(m: number, r: number, pos: Vec2 = Vec2.zero, vel: Vec2 = Vec2.zero) {
-        this.m = m;
-        this.radius = r;
-        this.pos = pos;
-        this.vel = vel;
-        this.acc = Vec2.zero;
-    }
-    
-    public integrate(dt: number) {
-        this.pos.add(this.vel.mul(dt), true);
-        this.vel.add(this.acc.mul(dt), true);
-        this.acc = Vec2.zero;
-
-        console.log([this.pos.x, this.pos.y]);
-    }
-}
+import { clamp } from "./util";
+import p5 from "p5";
 
 function updateAcceleration1(bodies: IBody[]) {
     for (const [i, b1] of bodies.entries()) {
@@ -82,15 +44,42 @@ function updateAcceleration2(bodies: IBody[]) {
     }
 }
 
+interface IBody {
+    m: number;
+    radius: number;
+    pos: Vec2;
+    vel: Vec2;
+    acc: Vec2;
+}
+
+export class DynamicBody {
+    m: number;
+    radius: number;
+    pos: Vec2;
+    vel: Vec2;
+    acc: Vec2;
+
+    constructor(m: number, r: number, pos: Vec2 = Vec2.zero, vel: Vec2 = Vec2.zero) {
+        this.m = m;
+        this.radius = r;
+        this.pos = pos;
+        this.vel = vel;
+        this.acc = Vec2.zero;
+    }
+    
+    public integrate(dt: number) {
+        this.pos.add(this.vel.mul(dt), true);
+        this.vel.add(this.acc.mul(dt), true);
+        this.acc = Vec2.zero;
+    }
+}
 
 export class Simulation extends GameLoopBase {
     private static instance: Simulation;
     private bodies: DynamicBody[] = [];
-    private startTime: number;
 
     private constructor() { 
-        super(0.1);
-        this.startTime = Date.now();
+        super({ timeStep: 0.1 });
     }
 
     public static getInstance(): Simulation {
@@ -119,7 +108,4 @@ export class Simulation extends GameLoopBase {
         return this.bodies.length;
     }
 
-    public get elapsedMs(): number {
-        return Date.now() - this.startTime;
-    }
 }
