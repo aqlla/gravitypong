@@ -1,5 +1,8 @@
-import { Vec2GenericBase } from "./vector_generic";
-export class Vec2 extends Vec2GenericBase {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Vec2 = void 0;
+const vector_generic_1 = require("./vector_generic");
+class Vec2 extends vector_generic_1.Vec2GenericBase {
     add(other, update = false) {
         const fn = (l, r) => [l.x + r.x, l.y + r.y];
         return this.applyArithmetic(fn, this, other, update);
@@ -32,3 +35,4 @@ export class Vec2 extends Vec2GenericBase {
         return new Vec2(0, 0);
     }
 }
+exports.Vec2 = Vec2;
