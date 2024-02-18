@@ -21,7 +21,7 @@ export class GameLoopBase implements GameLoop {
     protected startTime: number;
     private _processList: (() => void)[] = [
         this.update,
-        this.render
+        // this.render
     ];
     
     constructor(args: GameLoopParams) {

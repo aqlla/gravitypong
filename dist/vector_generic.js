@@ -19,8 +19,7 @@ export class Vec2GenericBase {
         return this;
     }
     // I dont know how to deal with state change and side effects anymore... imperative philosophy is kinda icky
-    applyArithmetic(fn, //(lhs: Vec2GenericBase<TNum>, rhs: TOther) => [TNum, TNum], 
-    self, other, update = false) {
+    applyArithmetic(fn, self, other, update = false) {
         const components = fn(self, other);
         if (update) {
             [this.x, this.y] = components;

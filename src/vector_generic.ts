@@ -46,7 +46,7 @@ export class Vec2GenericBase<TNum = number> implements IOrderedPair<TNum> {
 
     // I dont know how to deal with state change and side effects anymore... imperative philosophy is kinda icky
     protected applyArithmetic<TThis extends Vec2GenericBase<TNum>, TOther extends VectorMathOperand<TNum>>(
-            fn: VectorFn<TThis, TOther, TNum>, //(lhs: Vec2GenericBase<TNum>, rhs: TOther) => [TNum, TNum], 
+            fn: VectorFn<TThis, TOther, TNum>,
             self: TThis,
             other: TOther, 
             update: boolean = false): this {
