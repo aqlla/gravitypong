@@ -57,7 +57,7 @@ export class Vec2GenericBase<TNum = number> implements IOrderedPair<TNum> {
             [this.x, this.y] = components;
             return this;
         } else {
-            return new Vec2GenericBase<TNum>(...components);
+            return self.constructor(...components);
         }
     }
 

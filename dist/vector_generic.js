@@ -27,7 +27,7 @@ export class Vec2GenericBase {
             return this;
         }
         else {
-            return new Vec2GenericBase(...components);
+            return self.constructor(...components);
         }
     }
     eq(other) {
