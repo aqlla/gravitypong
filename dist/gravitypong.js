@@ -152,7 +152,7 @@ export class Simulation extends GameLoopBase {
         return new Vec2(scale(Math.random(), max, min), scale(Math.random(), max, min));
     }
     addBody(body) {
-        this.bodies[body.id] = body;
+        this.bodies.set(body.id, body);
     }
     update() {
         updateAcceleration2(this.bodies);

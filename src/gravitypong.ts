@@ -221,7 +221,7 @@ export class Simulation extends GameLoopBase {
     }
 
     public addBody(body: DynamicBody) {
-        this.bodies[body.id] = body;
+        this.bodies.set(body.id, body);
     }
 
     public update() {
