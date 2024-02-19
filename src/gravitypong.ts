@@ -23,7 +23,7 @@ function updateAcceleration1(bodies: IBody[]) {
 }
 
 function updateAcceleration2(bodies: IBody[]) {
-    const DISTANCE_SCALE = 100000;
+    const DISTANCE_SCALE = 10000;
     const DISTANCE_MIN = 5;
 
     for (const [i, b1] of bodies.entries()) {
@@ -34,7 +34,7 @@ function updateAcceleration2(bodies: IBody[]) {
             const r: Vec2 = b2.pos.sub(b1.pos);
             const distanceSquared = r.magnitudeSquared;
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
-            console.log(distance)
+            // console.log(distance)
             if (distance < DISTANCE_MIN)
                 continue;
 

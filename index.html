@@ -18,7 +18,7 @@
                 console.log(window["test"]);
 
                 if (Simulation) {
-                    s = Simulation.getInstance(50);
+                    s = Simulation.getInstance(500);
                     s.start();
                 }
             } 
@@ -30,7 +30,7 @@
         }        
         
         function draw() {
-            background(255);
+            background(200);
             const c = color(65);
 
             initSim();
