@@ -42,7 +42,7 @@ function bodysInCollisionsList(collisions: CollisionPair[], body1, body2): boole
 }
 
 function updateAcceleration2(bodies: BodyList) {
-    const DISTANCE_SCALE = 1000000;
+    const DISTANCE_SCALE = 100000;
     const DISTANCE_MIN = 1;
 
     const collisions: CollisionPair[] = []; 
