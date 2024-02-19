@@ -23,8 +23,8 @@ function updateAcceleration1(bodies: IBody[]) {
 }
 
 function updateAcceleration2(bodies: IBody[]) {
-    const DISTANCE_SCALE = 100;
-    const DISTANCE_MIN = DynamicBody.min_radius / DISTANCE_SCALE;
+    const DISTANCE_SCALE = 10000;
+    const DISTANCE_MIN = DynamicBody.min_radius;
 
     for (const [i, b1] of bodies.entries()) {
         for (let j = i + 1; j < bodies.length; j++) {
@@ -118,7 +118,7 @@ export class DynamicBody implements IBody {
     }
 
     public static get max_radius(): number {
-        return 30;
+        return 20;
     }
 
     public static get min_radius(): number {
