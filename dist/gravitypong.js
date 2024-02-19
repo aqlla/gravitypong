@@ -19,7 +19,7 @@ function updateAcceleration1(bodies) {
     }
 }
 function updateAcceleration2(bodies) {
-    const DISTANCE_SCALE = 100000;
+    const DISTANCE_SCALE = 1000;
     const DISTANCE_MIN = 5;
     for (const [i, b1] of bodies.entries()) {
         for (let j = i + 1; j < bodies.length; j++) {
@@ -28,7 +28,7 @@ function updateAcceleration2(bodies) {
             const r = b2.pos.sub(b1.pos);
             const distanceSquared = r.magnitudeSquared;
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
-            console.log(distance);
+            // console.log(distance)
             if (distance < DISTANCE_MIN)
                 continue;
             const accFactor = r.div(clamp(distanceSquared) * distance);
