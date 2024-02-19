@@ -69,7 +69,7 @@ function updateAcceleration2(bodies: BodyList) {
         const vy = (b1.m * b1.vel.y + b2.m * b2.vel.y) / mSum;
         const newBody = new DynamicBody({
             m: mSum,
-            pos: Vec2.mid(b1.pos, b2.pos),
+            pos: b1.pos, //Vec2.mid(b1.pos, b2.pos),
             vel: new Vec2(vx, vy)
         });
 
