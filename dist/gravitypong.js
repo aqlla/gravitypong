@@ -19,14 +19,18 @@ function updateAcceleration1(bodies) {
     }
 }
 function updateAcceleration2(bodies) {
+    const DISTANCE_SCALE = 100;
+    const DISTANCE_MIN = DynamicBody.min_radius / DISTANCE_SCALE;
     for (const [i, b1] of bodies.entries()) {
         for (let j = i + 1; j < bodies.length; j++) {
             const b2 = bodies[j];
             // calculate distance scalar and acc delta factor
             const r = b2.pos.sub(b1.pos);
-            const magSq = r.magnitudeSquared;
-            const mag = Math.sqrt(magSq);
-            const accFactor = r.div(clamp(magSq) * mag);
+            const distanceSquared = r.magnitudeSquared;
+            const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
+            if (distance < DISTANCE_MIN)
+                continue;
+            const accFactor = r.div(clamp(distanceSquared) * distance);
             // get acceleration delta for each body
             const dAcc1 = accFactor.mul(b2.m);
             const dAcc2 = accFactor.mul(b1.m);
@@ -45,8 +49,6 @@ export class DynamicBody {
         this.vel = args.vel ?? Vec2.zero;
         this.acc = args.acc ?? Vec2.zero;
         this.pos = args.pos;
-        console.log();
-        console.log('----------------------------------------');
         console.log({
             'm': this.m,
             'r': this.r,
@@ -76,7 +78,7 @@ export class DynamicBody {
         return 1;
     }
     static get max_radius() {
-        return 100;
+        return 30;
     }
     static get min_radius() {
         return 1;
