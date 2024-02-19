@@ -25,8 +25,8 @@ function updateAcceleration2(bodies) {
     const bodiesArr = Array.from(bodies);
     for (const [i, bod1] of bodiesArr.entries()) {
         for (let j = i + 1; j < bodiesArr.length; j++) {
-            const b1 = bod1['body'];
-            const b2 = bodiesArr[j]['body'];
+            const b1 = bod1[1];
+            const b2 = bodiesArr[j][1];
             // calculate distance scalar and acc delta factor
             const r = b2.pos.sub(b1.pos);
             const distanceSquared = r.magnitudeSquared;
