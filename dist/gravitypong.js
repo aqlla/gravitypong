@@ -75,7 +75,7 @@ export class Simulation extends GameLoopBase {
                     s.circle(b.pos.x, b.pos.y, b.radius);
                 }
             };
-        });
+        }, document.getElementById('p5sketch') || undefined);
     }
     static getInstance() {
         if (!Simulation.instance) {
