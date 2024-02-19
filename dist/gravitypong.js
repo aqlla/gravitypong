@@ -19,8 +19,8 @@ function updateAcceleration1(bodies) {
     }
 }
 function updateAcceleration2(bodies) {
-    const DISTANCE_SCALE = 10000;
-    const DISTANCE_MIN = DISTANCE_SCALE / 10;
+    const DISTANCE_SCALE = 100000;
+    const DISTANCE_MIN = DISTANCE_SCALE / 100;
     for (const [i, b1] of bodies.entries()) {
         for (let j = i + 1; j < bodies.length; j++) {
             const b2 = bodies[j];
