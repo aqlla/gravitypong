@@ -33,7 +33,7 @@ function updateAcceleration1(bodies: IBody[]) {
 }
 
 function updateAcceleration2(bodies: BodyList) {
-    const DISTANCE_SCALE = 100000;
+    const DISTANCE_SCALE = 1000;
     const DISTANCE_MIN = 1;
 
     const collisions: CollisionPair[] = []; 
@@ -50,7 +50,7 @@ function updateAcceleration2(bodies: BodyList) {
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
             
-            if (distance < (b1.r + b2.r) * 10000) {
+            if (distance < (b1.r + b2.r) * 100) {
                 // collide
                 b1.acc = Vec2.zero;
                 b2.acc = Vec2.zero;
