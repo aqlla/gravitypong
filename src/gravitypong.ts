@@ -32,6 +32,15 @@ function updateAcceleration1(bodies: IBody[]) {
     }
 }
 
+function bodysInCollisionsList(collisions: CollisionPair[], body1, body2): boolean {
+    let found = false;
+    for (const { b1, b2 } of collisions) {
+        if (found) break;
+        found = b1.id === body1.id || b2.id === body1.id || b1.id === body2.id || b2.id === body2.id;
+    }
+    return found
+}
+
 function updateAcceleration2(bodies: BodyList) {
     const DISTANCE_SCALE = 1000000;
     const DISTANCE_MIN = 1;
@@ -52,11 +61,11 @@ function updateAcceleration2(bodies: BodyList) {
             
             if (distance < (b1.r + b2.r) * 1000) {
                 // collide
-                b1.acc = Vec2.zero;
-                b2.acc = Vec2.zero;
-
-                collisions.push({ b1, b2 });
-
+                if (!bodysInCollisionsList(collisions, b1, b2)) {
+                    b1.acc = Vec2.zero;
+                    b2.acc = Vec2.zero;
+                    collisions.push({ b1, b2 });
+                }
             } else {
                 const accFactor = r.div(clamp(distanceSquared) * distance);
 
