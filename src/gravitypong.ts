@@ -32,9 +32,9 @@ function updateAcceleration2(bodies: BodyList) {
     const DISTANCE_MIN = 1;
 
     const collisions: CollisionPair[] = []; 
-    const bodiesArr = Array.from(bodies.entries());
+    const bodiesArr = Array.from(bodies);
 
-    for (const [ i, bod1 ] of bodiesArr) {
+    for (const [ i, bod1 ] of bodiesArr.entries()) {
         for (let j = i + 1; j < bodiesArr.length; j++) {
             const b1 = bod1['body'];
             const b2 = bodiesArr[j]['body'];

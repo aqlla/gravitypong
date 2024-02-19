@@ -22,8 +22,8 @@ function updateAcceleration2(bodies) {
     const DISTANCE_SCALE = 100000;
     const DISTANCE_MIN = 1;
     const collisions = [];
-    const bodiesArr = Array.from(bodies.entries());
-    for (const [i, bod1] of bodiesArr) {
+    const bodiesArr = Array.from(bodies);
+    for (const [i, bod1] of bodiesArr.entries()) {
         for (let j = i + 1; j < bodiesArr.length; j++) {
             const b1 = bod1['body'];
             const b2 = bodiesArr[j]['body'];
