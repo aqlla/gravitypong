@@ -56,6 +56,11 @@ function updateAcceleration2(bodies) {
             pos: Vec2.mid(b1.pos, b2.pos),
             vel: new Vec2(vx, vy)
         });
+        console.log("Collision:");
+        console.log("old:");
+        console.log([b1, b2]);
+        console.log("new:");
+        console.log(newBody);
         bodies.delete(b1.id);
         bodies.delete(b2.id);
         bodies.set(newBody.id, newBody);
