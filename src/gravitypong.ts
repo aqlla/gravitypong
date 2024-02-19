@@ -45,7 +45,7 @@ function updateAcceleration2(bodies: BodyList) {
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
             
-            if (distance < (b1.r + b2.r) * 1000) {
+            if (distance < (b1.r + b2.r) * 10000) {
                 // collide
                 collisions.push({ b1, b2 });
 
