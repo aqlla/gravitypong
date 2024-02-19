@@ -21,24 +21,44 @@ function updateAcceleration1(bodies) {
 function updateAcceleration2(bodies) {
     const DISTANCE_SCALE = 100000;
     const DISTANCE_MIN = 1;
-    for (const [i, b1] of bodies.entries()) {
-        for (let j = i + 1; j < bodies.length; j++) {
-            const b2 = bodies[j];
+    const collisions = [];
+    const bodiesArr = Array.from(bodies.entries());
+    for (const [i, bod1] of bodiesArr) {
+        for (let j = i + 1; j < bodiesArr.length; j++) {
+            const b1 = bod1['body'];
+            const b2 = bodies[j]['body'];
             // calculate distance scalar and acc delta factor
             const r = b2.pos.sub(b1.pos);
             const distanceSquared = r.magnitudeSquared;
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
-            if (distance < DISTANCE_MIN)
+            if (distance < DISTANCE_MIN) {
                 // collide
-                continue;
-            const accFactor = r.div(clamp(distanceSquared) * distance);
-            // get acceleration delta for each body
-            const dAcc1 = accFactor.mul(b2.m);
-            const dAcc2 = accFactor.mul(b1.m);
-            b1.acc = b1.acc.add(dAcc1);
-            b2.acc = b2.acc.sub(dAcc2);
+                collisions.push({ b1, b2 });
+            }
+            else {
+                const accFactor = r.div(clamp(distanceSquared) * distance);
+                // get acceleration delta for each body
+                const dAcc1 = accFactor.mul(b2.m);
+                const dAcc2 = accFactor.mul(b1.m);
+                b1.acc = b1.acc.add(dAcc1);
+                b2.acc = b2.acc.sub(dAcc2);
+            }
         }
+    }
+    for (const { b1, b2 } of collisions) {
+        // const b2Theta = Math.atan2(b2.vel.y, b2.vel.x);
+        const mSum = b1.m + b2.m;
+        const vx = (b1.m * b1.vel.x + b2.m * b2.vel.x) / mSum;
+        const vy = (b1.m * b1.vel.y + b2.m * b2.vel.y) / mSum;
+        const newBody = new DynamicBody({
+            m: mSum,
+            pos: Vec2.mid(b1.pos, b2.pos),
+            vel: new Vec2(vx, vy)
+        });
+        bodies.delete(b1.id);
+        bodies.delete(b2.id);
+        bodies.set(newBody.id, newBody);
     }
 }
 function scale(value, max, min) {
@@ -46,12 +66,15 @@ function scale(value, max, min) {
 }
 export class DynamicBody {
     constructor(args) {
+        this.id = 0;
         this.m = args.m ?? DynamicBody.getRandomMass();
         this.r = args.r ?? DynamicBody.getRadiusFromMass(this.m);
         this.vel = args.vel ?? Vec2.zero;
         this.acc = args.acc ?? Vec2.zero;
         this.pos = args.pos;
+        this.id = DynamicBody.idIncrementor++;
         console.log({
+            'id': this.id,
             'm': this.m,
             'r': this.r,
             'p': this.pos.toString(),
@@ -88,16 +111,20 @@ export class DynamicBody {
     static get raw_max_radius() {
         return DynamicBody.getRadiusFromMass(DynamicBody.max_mass, false);
     }
+    // public get momentum(): Vec2 {
+    //     return Vec2(...[this.m * ])
+    // }
     integrate(dt) {
         this.pos.add(this.vel.mul(dt), true);
         this.vel.add(this.acc.mul(dt), true);
         this.acc = Vec2.zero;
     }
 }
+DynamicBody.idIncrementor = 1;
 export class Simulation extends GameLoopBase {
     constructor() {
         super({ timeStep: 0.1 });
-        this.bodies = [];
+        this.bodies = new Map();
     }
     static getInstance(n) {
         if (!Simulation.instance) {
@@ -125,17 +152,18 @@ export class Simulation extends GameLoopBase {
         return new Vec2(scale(Math.random(), max, min), scale(Math.random(), max, min));
     }
     addBody(body) {
-        this.bodies.push(body);
+        this.bodies[body.id] = body;
     }
     update() {
         updateAcceleration2(this.bodies);
         this.updateDerivatives();
     }
     updateDerivatives() {
-        for (const b of this.bodies)
+        for (const b of this.bodies.values()) {
             b.integrate(this.timeStepSec);
+        }
     }
     get bodyCount() {
-        return this.bodies.length;
+        return this.bodies.size;
     }
 }

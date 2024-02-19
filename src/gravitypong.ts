@@ -2,6 +2,11 @@ import { GameLoopBase } from "./gameloop.js";
 import { Vec2 } from "./vector.js";
 import { clamp } from "./util.js";
 
+type CollisionPair = {
+    b1: IBody,
+    b2: IBody
+}
+
 function updateAcceleration1(bodies: IBody[]) {
     for (const [i, b1] of bodies.entries()) {
         for (const [j, b2] of bodies.entries()) {
@@ -22,33 +27,55 @@ function updateAcceleration1(bodies: IBody[]) {
     }
 }
 
-function updateAcceleration2(bodies: IBody[]) {
+function updateAcceleration2(bodies: BodyList) {
     const DISTANCE_SCALE = 100000;
     const DISTANCE_MIN = 1;
 
-    for (const [i, b1] of bodies.entries()) {
-        for (let j = i + 1; j < bodies.length; j++) {
-            const b2 = bodies[j];
+    const collisions: CollisionPair[] = []; 
+    const bodiesArr = Array.from(bodies.entries());
 
+    for (const [ i, bod1 ] of bodiesArr) {
+        for (let j = i + 1; j < bodiesArr.length; j++) {
+            const b1 = bod1['body'];
+            const b2 = bodies[j]['body'];
+            
             // calculate distance scalar and acc delta factor
             const r: Vec2 = b2.pos.sub(b1.pos);
             const distanceSquared = r.magnitudeSquared;
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
             
-            if (distance < DISTANCE_MIN)
+            if (distance < DISTANCE_MIN) {
                 // collide
-                continue;
+                collisions.push({ b1, b2 });
 
-            const accFactor = r.div(clamp(distanceSquared) * distance);
+            } else {
+                const accFactor = r.div(clamp(distanceSquared) * distance);
 
-            // get acceleration delta for each body
-            const dAcc1 = accFactor.mul(b2.m);
-            const dAcc2 = accFactor.mul(b1.m)
-
-            b1.acc = b1.acc.add(dAcc1);
-            b2.acc = b2.acc.sub(dAcc2);
+                // get acceleration delta for each body
+                const dAcc1 = accFactor.mul(b2.m);
+                const dAcc2 = accFactor.mul(b1.m)
+    
+                b1.acc = b1.acc.add(dAcc1);
+                b2.acc = b2.acc.sub(dAcc2);
+            }
         }
+    }
+
+    for (const { b1, b2 } of collisions) {
+        // const b2Theta = Math.atan2(b2.vel.y, b2.vel.x);
+        const mSum = b1.m + b2.m;
+        const vx = (b1.m * b1.vel.x + b2.m * b2.vel.x) / mSum;
+        const vy = (b1.m * b1.vel.y + b2.m * b2.vel.y) / mSum;
+        const newBody = new DynamicBody({
+            m: mSum,
+            pos: Vec2.mid(b1.pos, b2.pos),
+            vel: new Vec2(vx, vy)
+        });
+
+        bodies.delete(b1.id);
+        bodies.delete(b2.id);
+        bodies.set(newBody.id, newBody);
     }
 }
 
@@ -58,6 +85,8 @@ interface IBody {
     pos: Vec2;
     vel: Vec2;
     acc: Vec2;
+    readonly id: number,
+    // readonly momentum: Vec2,
 }
 
 function scale(value: number, max: number, min: number): number {
@@ -78,6 +107,9 @@ export class DynamicBody implements IBody {
     pos: Vec2;
     vel: Vec2;
     acc: Vec2;
+
+    private static idIncrementor = 1; 
+    public id: number = 0;
     
     constructor(args: DynamicBodyCtorArgs) {
         this.m = args.m ?? DynamicBody.getRandomMass();
@@ -86,7 +118,10 @@ export class DynamicBody implements IBody {
         this.acc = args.acc ?? Vec2.zero;
         this.pos = args.pos;
 
+        this.id = DynamicBody.idIncrementor++;
+
         console.log({
+            'id': this.id,
             'm': this.m,
             'r': this.r,
             'p': this.pos.toString(),
@@ -131,6 +166,10 @@ export class DynamicBody implements IBody {
         return DynamicBody.getRadiusFromMass(DynamicBody.max_mass, false);
     }
 
+    // public get momentum(): Vec2 {
+    //     return Vec2(...[this.m * ])
+    // }
+
     public integrate(dt: number) {
         this.pos.add(this.vel.mul(dt), true);
         this.vel.add(this.acc.mul(dt), true);
@@ -138,9 +177,11 @@ export class DynamicBody implements IBody {
     }
 }
 
+type BodyList = Map<number, DynamicBody>;
+
 export class Simulation extends GameLoopBase {
     private static instance: Simulation;
-    private bodies: DynamicBody[] = [];
+    private bodies: BodyList = new Map<number, DynamicBody>();
 
     private constructor() { 
         super({ timeStep: 0.1 });
@@ -162,7 +203,7 @@ export class Simulation extends GameLoopBase {
         return Simulation.instance;
     }
 
-    public get drawables(): any[] {
+    public get drawables(): BodyList {
         return this.bodies;
     }
 
@@ -180,7 +221,7 @@ export class Simulation extends GameLoopBase {
     }
 
     public addBody(body: DynamicBody) {
-        this.bodies.push(body);
+        this.bodies[body.id] = body;
     }
 
     public update() {
@@ -189,12 +230,14 @@ export class Simulation extends GameLoopBase {
     }
 
     public updateDerivatives() {
-        for (const b of this.bodies)
+        for (const b of this.bodies.values()) {
             b.integrate(this.timeStepSec);
+        }
+            
     }
 
     public get bodyCount(): number {
-        return this.bodies.length;
+        return this.bodies.size;
     }
 
 }

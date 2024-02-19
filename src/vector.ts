@@ -27,6 +27,14 @@ export class Vec2 extends Vec2GenericBase<number> {
         return this.applyArithmetic(fn, this, other, update);
     }
 
+    public static mid(lhs: Vec2, rhs: Vec2): Vec2 {
+        return new Vec2(...[(lhs.x + rhs.x) / 2, (lhs.y + rhs.y) / 2])
+    }
+
+    public get theta(): number {
+        return Math.atan2(this.y, this.x);
+    }
+
     public cross(other: Vec2): number {
         return this.x * other.y - this.y * other.x
     }
