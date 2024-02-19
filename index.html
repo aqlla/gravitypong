@@ -6,8 +6,7 @@
     <script type="module" src="./dist/index.js"></script>
 
     <script>
-        const s = window["sim"];
-        console.log(s)
+        let s = null;
 
         function setup() {
             frameRate(30);
@@ -23,7 +22,10 @@
                 for (const b of s.bodies) {
                     circle(b.pos.x, b.pos.y, b.radius);
                 }
-            }    
+            } else {
+                s = window["sim"]
+                console.log(s)
+            }
         }
     </script>
 </head>
