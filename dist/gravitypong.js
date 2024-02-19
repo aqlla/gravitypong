@@ -30,6 +30,7 @@ function updateAcceleration2(bodies) {
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
             if (distance < DISTANCE_MIN)
+                // collide
                 continue;
             const accFactor = r.div(clamp(distanceSquared) * distance);
             // get acceleration delta for each body
@@ -115,10 +116,10 @@ export class Simulation extends GameLoopBase {
     }
     // 100.000.000x 
     static get max_pos() {
-        return 500;
+        return 250;
     }
     static get min_pos() {
-        return -500;
+        return -250;
     }
     static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos) {
         return new Vec2(scale(Math.random(), max, min), scale(Math.random(), max, min));

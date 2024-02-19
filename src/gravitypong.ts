@@ -35,7 +35,9 @@ function updateAcceleration2(bodies: IBody[]) {
             const distanceSquared = r.magnitudeSquared;
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
+            
             if (distance < DISTANCE_MIN)
+                // collide
                 continue;
 
             const accFactor = r.div(clamp(distanceSquared) * distance);
@@ -166,11 +168,11 @@ export class Simulation extends GameLoopBase {
 
     // 100.000.000x 
     public static get max_pos(): number {
-        return 500;
+        return 250;
     }
 
     public static get min_pos(): number {
-        return -500;
+        return -250;
     }
 
     public static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos): Vec2 {
