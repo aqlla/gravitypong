@@ -31,7 +31,7 @@ function bodysInCollisionsList(collisions, body1, body2) {
     return found;
 }
 function updateAcceleration2(bodies) {
-    const DISTANCE_SCALE = 1000000;
+    const DISTANCE_SCALE = 500000;
     const DISTANCE_MIN = 1;
     const collisions = [];
     const bodiesArr = Array.from(bodies);
