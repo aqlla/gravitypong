@@ -233,7 +233,6 @@ export class Simulation extends GameLoopBase {
         for (const b of this.bodies.values()) {
             b.integrate(this.timeStepSec);
         }
-            
     }
 
     public get bodyCount(): number {
