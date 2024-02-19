@@ -31,7 +31,7 @@
     "baseUrl": "./src",                                  /* Specify the base directory to resolve non-relative module names. */
     "paths": {
       "p5": [
-        "../node_modules/p5/lib/p5.js",
+        // "../node_modules/p5/lib/p5.js",
         "../node_modules/@types/p5/lib/p5.js"
       ]
     },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */

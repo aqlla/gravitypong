@@ -1,7 +1,7 @@
 import { GameLoopBase } from "./gameloop.js";
 import { Vec2 } from "./vector.js";
 import { clamp } from "./util.js";
-import * as p5 from "p5";
+import p5 from "p5";
 function updateAcceleration1(bodies) {
     for (const [i, b1] of bodies.entries()) {
         for (const [j, b2] of bodies.entries()) {
