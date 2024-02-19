@@ -46,9 +46,15 @@ export class DynamicBody {
         this.acc = args.acc ?? Vec2.zero;
         this.pos = args.pos;
     }
-    static getRadiusFromMass(mass) {
+    static getRadiusFromMass(mass, scaled = true) {
         // just volume formula
-        return Math.cbrt((3 * mass) / (4 * Math.PI));
+        const raw_radius = Math.cbrt((3 * mass) / (4 * Math.PI));
+        if (scaled) {
+            return raw_radius * (DynamicBody.max_radius / DynamicBody.raw_max_radius);
+        }
+        else {
+            return raw_radius;
+        }
     }
     static getRandomMass(max = DynamicBody.max_mass, min = DynamicBody.min_mass) {
         return scale(Math.random(), max, min);
@@ -59,6 +65,15 @@ export class DynamicBody {
     }
     static get min_mass() {
         return 1;
+    }
+    static get max_radius() {
+        return 100;
+    }
+    static get min_radius() {
+        return 1;
+    }
+    static get raw_max_radius() {
+        return DynamicBody.getRadiusFromMass(DynamicBody.max_mass, false);
     }
     integrate(dt) {
         this.pos.add(this.vel.mul(dt), true);

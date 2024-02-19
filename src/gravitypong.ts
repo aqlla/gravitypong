@@ -78,9 +78,15 @@ export class DynamicBody implements IBody {
         this.pos = args.pos;
     }
 
-    public static getRadiusFromMass(mass: number): number {
+    public static getRadiusFromMass(mass: number, scaled: boolean = true): number {
         // just volume formula
-        return Math.cbrt((3 * mass) / (4 * Math.PI));
+        const raw_radius = Math.cbrt((3 * mass) / (4 * Math.PI));
+
+        if (scaled) {
+            return raw_radius * (DynamicBody.max_radius / DynamicBody.raw_max_radius)
+        } else {
+            return raw_radius;
+        }
     }
 
     public static getRandomMass(max = DynamicBody.max_mass, min = DynamicBody.min_mass): number {
@@ -94,6 +100,18 @@ export class DynamicBody implements IBody {
 
     public static get min_mass(): number {
         return 1;
+    }
+
+    public static get max_radius(): number {
+        return 100;
+    }
+
+    public static get min_radius(): number {
+        return 1;
+    }
+
+    public static get raw_max_radius(): number {
+        return DynamicBody.getRadiusFromMass(DynamicBody.max_mass, false);
     }
 
     public integrate(dt: number) {
