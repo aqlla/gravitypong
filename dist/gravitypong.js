@@ -22,7 +22,7 @@ function updateAcceleration1(bodies) {
     }
 }
 function updateAcceleration2(bodies) {
-    const DISTANCE_SCALE = 100000;
+    const DISTANCE_SCALE = 1000000;
     const DISTANCE_MIN = 1;
     const collisions = [];
     const bodiesArr = Array.from(bodies);
