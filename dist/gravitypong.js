@@ -31,7 +31,7 @@ function bodysInCollisionsList(collisions, body1, body2) {
     return found;
 }
 function updateAcceleration2(bodies) {
-    const DISTANCE_SCALE = 100000;
+    const DISTANCE_SCALE = 10000;
     const DISTANCE_MIN = 1;
     const collisions = [];
     const bodiesArr = Array.from(bodies);
@@ -44,7 +44,7 @@ function updateAcceleration2(bodies) {
             const distanceSquared = r.magnitudeSquared;
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
-            if (distance < (b1.r + b2.r) * 10000) {
+            if (distance < (b1.r + b2.r) * 1000) {
                 // collide
                 if (!bodysInCollisionsList(collisions, b1, b2)) {
                     b1.acc = Vec2.zero;
