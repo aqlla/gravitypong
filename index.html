@@ -1,8 +1,28 @@
 <!DOCTYPE html>
 <head>
     <title>gravitypong</title>
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.js"></script>
     <script type="module" src="./dist/index.js"></script>
+
+    <script>
+        const s = window["sim"];
+        
+        function setup() {
+            frameRate(30);
+            createCanvas(500, 500);
+        }        
+        
+        function draw() {
+            background(0);
+            const c = color(65);
+
+            fill(c);        
+            for (const b of this.bodies) {
+                s.circle(b.pos.x, b.pos.y, b.radius);
+            }
+        }
+    </script>
 </head>
 <body>
     <h3>Hello, Wordl</h3>

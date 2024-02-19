@@ -1,7 +1,6 @@
 import { GameLoopBase } from "./gameloop.js";
 import { Vec2 } from "./vector.js";
 import { clamp } from "./util.js";
-import p5 from "p5";
 
 function updateAcceleration1(bodies: IBody[]) {
     for (const [i, b1] of bodies.entries()) {
@@ -88,26 +87,9 @@ export class DynamicBody {
 export class Simulation extends GameLoopBase {
     private static instance: Simulation;
     private bodies: DynamicBody[] = [];
-    private _p5: p5;
 
     private constructor() { 
         super({ timeStep: 0.1 });
-        this._p5 = new p5(s => {
-            s.setup = () => {
-                s.frameRate(30);
-                s.createCanvas(500,500);
-            };
-
-            const c = s.color(65);
-        
-            s.draw = () => {
-                s.background(0);
-                s.fill(c);        
-                for (const b of this.bodies) {
-                    s.circle(b.pos.x, b.pos.y, b.radius);
-                }
-            };
-        }, document.getElementById('p5sketch') || undefined);
     }
 
     public static getInstance(): Simulation {
