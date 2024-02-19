@@ -3,6 +3,7 @@ import { Vec2 } from './vector.js';
 
 window["Simulation"] = Simulation;
 window["DynamicBody"] = DynamicBody;
+window["Vec2"] = Vec2;
 window["test"] = "teasdafaafafafsfd";
 
 // const s = Simulation.getInstance();
