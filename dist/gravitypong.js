@@ -119,13 +119,13 @@ export class DynamicBody {
     }
     // 100.000.000x 
     static get max_mass() {
-        return 1000000000;
+        return 100000000;
     }
     static get min_mass() {
         return 1;
     }
     static get max_radius() {
-        return 20;
+        return 10;
     }
     static get min_radius() {
         return 1;
