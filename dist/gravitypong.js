@@ -44,7 +44,7 @@ function updateAcceleration2(bodies) {
             const distanceSquared = r.magnitudeSquared;
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
-            if (distance < (b1.r + b2.r) * 100) {
+            if (distance < (b1.r + b2.r) * 500) {
                 // collide
                 if (!bodysInCollisionsList(collisions, b1, b2)) {
                     b1.acc = Vec2.zero;
