@@ -45,42 +45,61 @@ function updateAcceleration2(bodies: IBody[]) {
 
 interface IBody {
     m: number;
-    radius: number;
+    r: number;
     pos: Vec2;
     vel: Vec2;
     acc: Vec2;
 }
 
-export class DynamicBody {
+function scale(value: number, max: number, min: number): number {
+    return (value * (max - min)) + min;
+}
+
+type DynamicBodyCtorArgs = {
+    m?: number,
+    r?: number,
+    pos: Vec2,
+    vel?: Vec2,
+    acc?: Vec2,
+}
+
+export class DynamicBody implements IBody {
     m: number;
-    radius: number;
+    r: number;
     pos: Vec2;
     vel: Vec2;
     acc: Vec2;
-
-    private _dbg_step = 0;
-
-    constructor(m: number, r: number, pos: Vec2 = Vec2.zero, vel: Vec2 = Vec2.zero) {
-        this.m = m;
-        this.radius = r;
-        this.pos = pos;
-        this.vel = vel;
-        this.acc = Vec2.zero;
-    }
-
-    private dbg(message: string) {
-        if (this._dbg_step++ === 10) {
-            console.log(message);
-            this._dbg_step = 0;
-        }
-    }
     
+    constructor(args: DynamicBodyCtorArgs) {
+        this.m = args.m ?? DynamicBody.getRandomMass();
+        this.r = args.r ?? DynamicBody.getRadiusFromMass(this.m);
+        this.vel = args.vel ?? Vec2.zero;
+        this.acc = args.acc ?? Vec2.zero;
+        this.pos = args.pos;
+    }
+
+    public static getRadiusFromMass(mass: number): number {
+        // just volume formula
+        return Math.cbrt((3 * mass) / (4 * Math.PI));
+    }
+
+    public static getRandomMass(max = DynamicBody.max_mass, min = DynamicBody.min_mass): number {
+        return scale(Math.random(), max, min);
+    }
+
+    // 100.000.000x 
+    public static get max_mass(): number {
+        return 100000000;
+    }
+
+    public static get min_mass(): number {
+        return 1;
+    }
+
     public integrate(dt: number) {
         this.pos.add(this.vel.mul(dt), true);
         this.vel.add(this.acc.mul(dt), true);
         this.acc = Vec2.zero;
-
-        this.dbg(this.pos.toString());
     }
 }
 
@@ -92,12 +111,37 @@ export class Simulation extends GameLoopBase {
         super({ timeStep: 0.1 });
     }
 
-    public static getInstance(): Simulation {
+    public static getInstance(n: number): Simulation {
         if (!Simulation.instance) {
             Simulation.instance = new Simulation();
+
+            for (let i = 0; i < n; i++) {
+                const body = new DynamicBody({ 
+                    pos: Simulation.getRandomPos() 
+                })
+
+                Simulation.instance.addBody(body);
+            }
         }
 
         return Simulation.instance;
+    }
+
+    public get drawables(): any[] {
+        return this.bodies;
+    }
+
+    // 100.000.000x 
+    public static get max_pos(): number {
+        return 1000;
+    }
+
+    public static get min_pos(): number {
+        return -1000;
+    }
+
+    public static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos): Vec2 {
+        return new Vec2(scale(Math.random(), max, min), scale(Math.random(), max, min));
     }
 
     public addBody(body: DynamicBody) {

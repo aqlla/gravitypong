@@ -35,26 +35,35 @@ function updateAcceleration2(bodies) {
         }
     }
 }
+function scale(value, max, min) {
+    return (value * (max - min)) + min;
+}
 export class DynamicBody {
-    constructor(m, r, pos = Vec2.zero, vel = Vec2.zero) {
-        this._dbg_step = 0;
-        this.m = m;
-        this.radius = r;
-        this.pos = pos;
-        this.vel = vel;
-        this.acc = Vec2.zero;
+    constructor(args) {
+        this.m = args.m ?? DynamicBody.getRandomMass();
+        this.r = args.r ?? DynamicBody.getRadiusFromMass(this.m);
+        this.vel = args.vel ?? Vec2.zero;
+        this.acc = args.acc ?? Vec2.zero;
+        this.pos = args.pos;
     }
-    dbg(message) {
-        if (this._dbg_step++ === 10) {
-            console.log(message);
-            this._dbg_step = 0;
-        }
+    static getRadiusFromMass(mass) {
+        // just volume formula
+        return Math.cbrt((3 * mass) / (4 * Math.PI));
+    }
+    static getRandomMass(max = DynamicBody.max_mass, min = DynamicBody.min_mass) {
+        return scale(Math.random(), max, min);
+    }
+    // 100.000.000x 
+    static get max_mass() {
+        return 100000000;
+    }
+    static get min_mass() {
+        return 1;
     }
     integrate(dt) {
         this.pos.add(this.vel.mul(dt), true);
         this.vel.add(this.acc.mul(dt), true);
         this.acc = Vec2.zero;
-        this.dbg(this.pos.toString());
     }
 }
 export class Simulation extends GameLoopBase {
@@ -62,11 +71,30 @@ export class Simulation extends GameLoopBase {
         super({ timeStep: 0.1 });
         this.bodies = [];
     }
-    static getInstance() {
+    static getInstance(n) {
         if (!Simulation.instance) {
             Simulation.instance = new Simulation();
+            for (let i = 0; i < n; i++) {
+                const body = new DynamicBody({
+                    pos: Simulation.getRandomPos()
+                });
+                Simulation.instance.addBody(body);
+            }
         }
         return Simulation.instance;
+    }
+    get drawables() {
+        return this.bodies;
+    }
+    // 100.000.000x 
+    static get max_pos() {
+        return 1000;
+    }
+    static get min_pos() {
+        return -1000;
+    }
+    static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos) {
+        return new Vec2(scale(Math.random(), max, min), scale(Math.random(), max, min));
     }
     addBody(body) {
         this.bodies.push(body);
