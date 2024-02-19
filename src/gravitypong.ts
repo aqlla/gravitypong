@@ -76,6 +76,16 @@ export class DynamicBody implements IBody {
         this.vel = args.vel ?? Vec2.zero;
         this.acc = args.acc ?? Vec2.zero;
         this.pos = args.pos;
+
+        console.log();
+        console.log('----------------------------------------')
+        console.log({
+            'm': this.m,
+            'r': this.r,
+            'p': this.pos,
+            'v': this.vel,
+            'a': this.acc
+        })
     }
 
     public static getRadiusFromMass(mass: number, scaled: boolean = true): number {
