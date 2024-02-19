@@ -42,7 +42,7 @@ function bodysInCollisionsList(collisions: CollisionPair[], body1, body2): boole
 }
 
 function updateAcceleration2(bodies: BodyList) {
-    const DISTANCE_SCALE = 100000;
+    const DISTANCE_SCALE = 10000;
     const DISTANCE_MIN = 1;
 
     const collisions: CollisionPair[] = []; 
@@ -59,7 +59,7 @@ function updateAcceleration2(bodies: BodyList) {
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
             
-            if (distance < (b1.r + b2.r) * 500) {
+            if (distance < (b1.r + b2.r) * 100) {
                 // collide
                 if (!bodysInCollisionsList(collisions, b1, b2)) {
                     b1.acc = Vec2.zero;
@@ -211,7 +211,7 @@ export class Simulation extends GameLoopBase {
     private bodies: BodyList = new Map<number, DynamicBody>();
 
     private constructor() { 
-        super({ timeStep: 0.01 });
+        super({ timeStep: 0.002 });
     }
 
     public static getInstance(n: number): Simulation {
