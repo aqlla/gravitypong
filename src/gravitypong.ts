@@ -24,7 +24,7 @@ function updateAcceleration1(bodies: IBody[]) {
 
 function updateAcceleration2(bodies: IBody[]) {
     const DISTANCE_SCALE = 1000;
-    const DISTANCE_MIN = 5;
+    const DISTANCE_MIN = DISTANCE_SCALE / 2;
 
     for (const [i, b1] of bodies.entries()) {
         for (let j = i + 1; j < bodies.length; j++) {
