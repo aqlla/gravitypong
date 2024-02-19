@@ -37,7 +37,7 @@ function updateAcceleration2(bodies: BodyList) {
     for (const [ i, bod1 ] of bodiesArr) {
         for (let j = i + 1; j < bodiesArr.length; j++) {
             const b1 = bod1['body'];
-            const b2 = bodies[j]['body'];
+            const b2 = bodiesArr[j]['body'];
             
             // calculate distance scalar and acc delta factor
             const r: Vec2 = b2.pos.sub(b1.pos);
