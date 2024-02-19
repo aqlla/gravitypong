@@ -1,6 +1,9 @@
 import { GameLoopBase } from "./gameloop.js";
 import { Vec2 } from "./vector.js";
 import { clamp } from "./util.js";
+function scale(value, max, min) {
+    return (value * (max - min)) + min;
+}
 function updateAcceleration1(bodies) {
     for (const [i, b1] of bodies.entries()) {
         for (const [j, b2] of bodies.entries()) {
@@ -34,6 +37,8 @@ function updateAcceleration2(bodies) {
             // console.log(distance)
             if (distance < (b1.r + b2.r) * 10000) {
                 // collide
+                b1.acc = Vec2.zero;
+                b2.acc = Vec2.zero;
                 collisions.push({ b1, b2 });
             }
             else {
@@ -47,14 +52,10 @@ function updateAcceleration2(bodies) {
         }
     }
     for (const { b1, b2 } of collisions) {
-        // const b2Theta = Math.atan2(b2.vel.y, b2.vel.x);
-        const mSum = b1.m + b2.m;
-        const vx = (b1.m * b1.vel.x + b2.m * b2.vel.x) / mSum;
-        const vy = (b1.m * b1.vel.y + b2.m * b2.vel.y) / mSum;
         const newBody = new DynamicBody({
-            m: mSum,
+            m: b1.m + b2.m,
             pos: b1.pos, //Vec2.mid(b1.pos, b2.pos),
-            vel: new Vec2(vx, vy)
+            vel: DynamicBody.collisionMomentum(b1, b2)
         });
         console.log("Collision:");
         console.log("old:");
@@ -65,9 +66,6 @@ function updateAcceleration2(bodies) {
         bodies.delete(b2.id);
         bodies.set(newBody.id, newBody);
     }
-}
-function scale(value, max, min) {
-    return (value * (max - min)) + min;
 }
 export class DynamicBody {
     constructor(args) {
@@ -86,6 +84,14 @@ export class DynamicBody {
             'v': this.vel.toString(),
             'a': this.acc.toString()
         });
+    }
+    static collisionMomentum(b1, b2) {
+        const mSum = b1.m + b2.m;
+        // const vx = (b1.m * b1.vel.x + b2.m * b2.vel.x) / mSum;
+        // const vy = (b1.m * b1.vel.y + b2.m * b2.vel.y) / mSum;
+        const momentum1 = b1.vel.mul(b1.m / mSum);
+        const momentum2 = b2.vel.mul(b2.m / mSum);
+        return momentum1.add(momentum2);
     }
     static getRadiusFromMass(mass, scaled = true) {
         // just volume formula
