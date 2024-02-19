@@ -20,8 +20,11 @@
                 if (Simulation) {
                     s = Simulation.getInstance();
                                 
-                    s.addBody(new DynamicBody(1000, 10))
-                    s.addBody(new DynamicBody(10, 4, new Vec2(100, 0), new Vec2(10, 5)));
+                    s.addBody(new DynamicBody(100000, 30, new Vec2(300, 300)));
+                    s.addBody(new DynamicBody(100, 5, new Vec2(100, 250)));
+                    s.addBody(new DynamicBody(10000, 15, new Vec2(30, 100)));
+                    s.addBody(new DynamicBody(500, 7, new Vec2(100, 500)));
+                    s.addBody(new DynamicBody(500, 7, new Vec2(300, 250)));
                     
                     console.log(s);
                     s.start();
@@ -33,7 +36,7 @@
 
         function setup() {
             frameRate(30);
-            createCanvas(500, 500);
+            createCanvas(640, 640);
         }        
         
         function draw() {
@@ -56,8 +59,5 @@
 </head>
 <body>
     <h3>Hello, Wordl</h3>
-
-    <div id="p5sketch" style="height: 500px;">
-
-    </div>
+    <div id="p5sketch"></div>
 </body>
