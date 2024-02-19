@@ -112,7 +112,7 @@ export class DynamicBody implements IBody {
 
     // 100.000.000x 
     public static get max_mass(): number {
-        return 100000000;
+        return 1000000000;
     }
 
     public static get min_mass(): number {
