@@ -8,6 +8,28 @@
     <script>
         let s = null;
 
+        function initSim() {
+            if (!s) {
+                const Simulation = window["Simulation"];
+                const DynamicBody = window["DynamicBody"];
+
+                console.log(Simulation);
+                console.log(window["test"]);
+
+                if (Simulation) {
+                    s = Simulation.getInstance();
+                                
+                    s.addBody(new DynamicBody(1000, 10))
+                    s.addBody(new DynamicBody(10, 4, new Vec2(100, 0), new Vec2(10, 5)));
+                    
+                    console.log(s);
+                    s.start();
+                }
+            } 
+        }
+
+
+
         function setup() {
             frameRate(30);
             createCanvas(500, 500);
@@ -16,6 +38,8 @@
         function draw() {
             background(255);
             const c = color(65);
+
+            initSim();
 
             fill(c);
             if (s && s.bodies) {
