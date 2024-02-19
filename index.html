@@ -7,7 +7,7 @@
 
     <script>
         const s = window["sim"];
-        
+
         function setup() {
             frameRate(30);
             createCanvas(500, 500);
@@ -18,8 +18,8 @@
             const c = color(65);
 
             fill(c);        
-            for (const b of this.bodies) {
-                s.circle(b.pos.x, b.pos.y, b.radius);
+            for (const b of s.bodies) {
+                circle(b.pos.x, b.pos.y, b.radius);
             }
         }
     </script>
