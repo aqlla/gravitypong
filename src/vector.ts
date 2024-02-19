@@ -46,8 +46,4 @@ export class Vec2 extends Vec2GenericBase<number> {
     static get zero(): Vec2 {
         return new Vec2(0, 0);
     }
-
-    toString(): string {
-        return "[" + this.x + ", " + this.y + "]"; 
-    }
 }

@@ -82,9 +82,9 @@ export class DynamicBody implements IBody {
         console.log({
             'm': this.m,
             'r': this.r,
-            'p': this.pos,
-            'v': this.vel,
-            'a': this.acc
+            'p': this.pos.toString(),
+            'v': this.vel.toString(),
+            'a': this.acc.toString()
         })
     }
 

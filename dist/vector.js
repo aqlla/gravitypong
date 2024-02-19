@@ -31,7 +31,4 @@ export class Vec2 extends Vec2GenericBase {
     static get zero() {
         return new Vec2(0, 0);
     }
-    toString() {
-        return "[" + this.x + ", " + this.y + "]";
-    }
 }

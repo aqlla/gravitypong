@@ -66,4 +66,8 @@ export class Vec2GenericBase<TNum = number> implements IOrderedPair<TNum> {
     public eq(other: Vec2GenericBase<TNum>): boolean {
         return this.x == other.x && this.y == other.y;
     }
+
+    toString(): string {
+        return "[" + this.x + ", " + this.y + "]"; 
+    }
 }
