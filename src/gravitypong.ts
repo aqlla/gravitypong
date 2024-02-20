@@ -232,7 +232,7 @@ export class Simulation extends GameLoopBase {
 
             // Sun
             Simulation.instance.addBody(new DynamicBody({
-                m: DynamicBody.max_mass * 1500,
+                m: DynamicBody.max_mass * 2500,
                 pos: new Vec2(0, 0),
             }));
 
@@ -242,7 +242,7 @@ export class Simulation extends GameLoopBase {
 
                 const body = new DynamicBody({ 
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 200000, -pos.x / distanceFromOrigin * 200000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 250000, -pos.x / distanceFromOrigin * 250000),
                 })
 
                 Simulation.instance.addBody(body);
