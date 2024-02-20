@@ -66,11 +66,11 @@ function updateAcceleration2(bodies) {
             pos: b1.pos, //Vec2.mid(b1.pos, b2.pos),
             vel: DynamicBody.collisionMomentum(b1, b2)
         });
-        console.log("Collision:");
-        console.log("old:");
-        console.log([b1, b2]);
-        console.log("new:");
-        console.log(newBody);
+        // console.log("Collision:");
+        // console.log("old:");
+        // console.log([b1, b2]);
+        // console.log("new:");
+        // console.log(newBody);
         bodies.delete(b1.id);
         bodies.delete(b2.id);
         bodies.set(newBody.id, newBody);
@@ -143,7 +143,7 @@ export class DynamicBody {
 DynamicBody.idIncrementor = 1;
 export class Simulation extends GameLoopBase {
     constructor() {
-        super({ timeStep: 0.001 });
+        super({ timeStep: 0.002 });
         this.bodies = new Map();
     }
     static getInstance(n) {
@@ -151,10 +151,10 @@ export class Simulation extends GameLoopBase {
             Simulation.instance = new Simulation();
             for (let i = 0; i < n; i++) {
                 const pos = Simulation.getRandomPos();
-                const distanceFromOrigin = pos.magnitude;
+                const distanceFromOrigin = pos.magnitudeSquared;
                 const body = new DynamicBody({
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 500, -pos.x / distanceFromOrigin * 500),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 1000, -pos.x / distanceFromOrigin * 1000),
                 });
                 Simulation.instance.addBody(body);
             }
@@ -166,10 +166,10 @@ export class Simulation extends GameLoopBase {
     }
     // 100.000.000x 
     static get max_pos() {
-        return 200;
+        return 250;
     }
     static get min_pos() {
-        return -200;
+        return -250;
     }
     static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos) {
         return new Vec2(scale(Math.random(), max, min), scale(Math.random(), max, min));

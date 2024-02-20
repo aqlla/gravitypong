@@ -85,11 +85,11 @@ function updateAcceleration2(bodies: BodyList) {
             vel: DynamicBody.collisionMomentum(b1, b2)
         });
 
-        console.log("Collision:");
-        console.log("old:");
-        console.log([b1, b2]);
-        console.log("new:");
-        console.log(newBody);
+        // console.log("Collision:");
+        // console.log("old:");
+        // console.log([b1, b2]);
+        // console.log("new:");
+        // console.log(newBody);
         
 
         bodies.delete(b1.id);
@@ -209,7 +209,7 @@ export class Simulation extends GameLoopBase {
     private bodies: BodyList = new Map<number, DynamicBody>();
 
     private constructor() { 
-        super({ timeStep: 0.001 });
+        super({ timeStep: 0.002 });
     }
 
     public static getInstance(n: number): Simulation {
@@ -218,11 +218,11 @@ export class Simulation extends GameLoopBase {
 
             for (let i = 0; i < n; i++) {
                 const pos = Simulation.getRandomPos();
-                const distanceFromOrigin = pos.magnitude;
+                const distanceFromOrigin = pos.magnitudeSquared;
 
                 const body = new DynamicBody({ 
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 500, -pos.x / distanceFromOrigin * 500),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 1000, -pos.x / distanceFromOrigin * 1000),
                 })
 
                 Simulation.instance.addBody(body);
@@ -238,11 +238,11 @@ export class Simulation extends GameLoopBase {
 
     // 100.000.000x 
     public static get max_pos(): number {
-        return 200;
+        return 250;
     }
 
     public static get min_pos(): number {
-        return -200;
+        return -250;
     }
 
     public static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos): Vec2 {
