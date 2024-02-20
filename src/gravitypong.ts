@@ -59,7 +59,7 @@ function updateAcceleration2(bodies: BodyList) {
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
             
-            if (distance < (b1.r + b2.r) * 3000 && !bodysInCollisionsList(collisions, b1, b2)) {
+            if (distance < (b1.r + b2.r) * 5000 && !bodysInCollisionsList(collisions, b1, b2)) {
                 // collide
                 b1.acc = Vec2.zero;
                 b2.acc = Vec2.zero;
@@ -270,15 +270,15 @@ export class Simulation extends GameLoopBase {
         let y = scale(Math.random(), max, min);
 
         if (x < 0) {
-            x -= 250;
+            x -= 500;
         } else {
-            x += 350;
+            x += 650;
         }
 
         if (y < 0) {
-            y -= 150;
+            y -= 350;
         } else {
-            y += 450;
+            y += 750;
         }
 
         return new Vec2(x, y);
