@@ -64,7 +64,8 @@ function updateAcceleration2(bodies) {
         const newBody = new DynamicBody({
             m: b1.m + b2.m,
             pos: b1.pos, //Vec2.mid(b1.pos, b2.pos),
-            vel: DynamicBody.collisionMomentum(b1, b2)
+            vel: DynamicBody.collisionMomentum(b1, b2),
+            static: b1.static || b2.static
         });
         // console.log("Collision:");
         // console.log("old:");
@@ -84,6 +85,7 @@ export class DynamicBody {
         this.vel = args.vel ?? Vec2.zero;
         this.acc = args.acc ?? Vec2.zero;
         this.pos = args.pos;
+        this.static = args.static ?? false;
         this.id = DynamicBody.idIncrementor++;
         console.log({
             'id': this.id,
@@ -135,8 +137,10 @@ export class DynamicBody {
     //     return Vec2(...[this.m * ])
     // }
     integrate(dt) {
-        this.pos.add(this.vel.mul(dt), true);
-        this.vel.add(this.acc.mul(dt), true);
+        if (this.static) {
+            this.pos.add(this.vel.mul(dt), true);
+            this.vel.add(this.acc.mul(dt), true);
+        }
         this.acc = Vec2.zero;
     }
 }
@@ -149,9 +153,14 @@ export class Simulation extends GameLoopBase {
     static getInstance(n) {
         if (!Simulation.instance) {
             Simulation.instance = new Simulation();
+            // Sun
+            Simulation.instance.addBody(new DynamicBody({
+                m: DynamicBody.max_mass,
+                pos: new Vec2(0, 0),
+            }));
             for (let i = 0; i < n; i++) {
                 const pos = Simulation.getRandomPos();
-                const distanceFromOrigin = pos.magnitude;
+                const distanceFromOrigin = pos.magnitudeSquared;
                 const body = new DynamicBody({
                     pos: pos,
                     vel: new Vec2(pos.y / distanceFromOrigin * 1000, -pos.x / distanceFromOrigin * 1000),

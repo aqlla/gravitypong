@@ -78,11 +78,11 @@ function updateAcceleration2(bodies: BodyList) {
     }
 
     for (const { b1, b2 } of collisions) {
-        
         const newBody = new DynamicBody({
             m: b1.m + b2.m,
             pos: b1.pos, //Vec2.mid(b1.pos, b2.pos),
-            vel: DynamicBody.collisionMomentum(b1, b2)
+            vel: DynamicBody.collisionMomentum(b1, b2),
+            static: b1.static || b2.static
         });
 
         // console.log("Collision:");
@@ -105,6 +105,7 @@ interface IBody {
     vel: Vec2;
     acc: Vec2;
     readonly id: number,
+    readonly static: boolean
     // readonly momentum: Vec2,
 }
 
@@ -114,6 +115,7 @@ type DynamicBodyCtorArgs = {
     pos: Vec2,
     vel?: Vec2,
     acc?: Vec2,
+    static?: boolean
 }
 
 export class DynamicBody implements IBody {
@@ -122,6 +124,7 @@ export class DynamicBody implements IBody {
     pos: Vec2;
     vel: Vec2;
     acc: Vec2;
+    static: boolean;
 
     private static idIncrementor = 1; 
     public id: number = 0;
@@ -132,6 +135,7 @@ export class DynamicBody implements IBody {
         this.vel = args.vel ?? Vec2.zero;
         this.acc = args.acc ?? Vec2.zero;
         this.pos = args.pos;
+        this.static = args.static ?? false;
 
         this.id = DynamicBody.idIncrementor++;
 
@@ -196,8 +200,11 @@ export class DynamicBody implements IBody {
     // }
 
     public integrate(dt: number) {
-        this.pos.add(this.vel.mul(dt), true);
-        this.vel.add(this.acc.mul(dt), true);
+        if (this.static) {
+            this.pos.add(this.vel.mul(dt), true);
+            this.vel.add(this.acc.mul(dt), true);       
+        }
+        
         this.acc = Vec2.zero;
     }
 } 
@@ -216,9 +223,15 @@ export class Simulation extends GameLoopBase {
         if (!Simulation.instance) {
             Simulation.instance = new Simulation();
 
+            // Sun
+            Simulation.instance.addBody(new DynamicBody({
+                m: DynamicBody.max_mass,
+                pos: new Vec2(0, 0),
+            }));
+
             for (let i = 0; i < n; i++) {
                 const pos = Simulation.getRandomPos();
-                const distanceFromOrigin = pos.magnitude;
+                const distanceFromOrigin = pos.magnitudeSquared;
 
                 const body = new DynamicBody({ 
                     pos: pos,
