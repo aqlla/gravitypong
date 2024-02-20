@@ -170,7 +170,7 @@ export class Simulation extends GameLoopBase {
                 const distanceFromOrigin = pos.magnitudeSquared;
                 const body = new DynamicBody({
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 500000, -pos.x / distanceFromOrigin * 500000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 600000, -pos.x / distanceFromOrigin * 600000),
                 });
                 Simulation.instance.addBody(body);
             }
