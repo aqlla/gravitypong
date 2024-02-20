@@ -59,7 +59,7 @@ function updateAcceleration2(bodies: BodyList) {
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
             
-            if (distance < (b1.r + b2.r) * 4500 && !bodysInCollisionsList(collisions, b1, b2)) {
+            if (distance < (b1.r + b2.r) * 4000 && !bodysInCollisionsList(collisions, b1, b2)) {
                 // collide
                 b1.acc = Vec2.zero;
                 b2.acc = Vec2.zero;
@@ -223,7 +223,7 @@ export class Simulation extends GameLoopBase {
     private bodies: BodyList = new Map<number, DynamicBody>();
 
     private constructor() { 
-        super({ timeStep: 0.01 });
+        super({ timeStep: 0.005 });
     }
 
     public static getInstance(n: number): Simulation {
@@ -242,7 +242,7 @@ export class Simulation extends GameLoopBase {
 
                 const body = new DynamicBody({ 
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 300000, -pos.x / distanceFromOrigin * 300000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 500000, -pos.x / distanceFromOrigin * 500000),
                 })
 
                 Simulation.instance.addBody(body);
@@ -272,13 +272,13 @@ export class Simulation extends GameLoopBase {
         if (x < 0) {
             x -= 500;
         } else {
-            x += 2000;
+            x += 4000;
         }
 
         if (y < 0) {
-            y -= 750;
+            y -= 3000;
         } else {
-            y += 2500;
+            y += 4500;
         }
 
         return new Vec2(x, y);
