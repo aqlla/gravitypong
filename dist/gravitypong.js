@@ -154,7 +154,7 @@ export class DynamicBody {
 DynamicBody.idIncrementor = 1;
 export class Simulation extends GameLoopBase {
     constructor() {
-        super({ timeStep: 0.005 });
+        super({ timeStep: 0.01 });
         this.bodies = new Map();
         this.framerate = 0;
     }
@@ -183,10 +183,10 @@ export class Simulation extends GameLoopBase {
     }
     // 100.000.000x 
     static get max_pos() {
-        return 1000;
+        return 2000;
     }
     static get min_pos() {
-        return -1000;
+        return -2000;
     }
     static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos) {
         let x = scale(Math.random(), max, min);
