@@ -188,7 +188,21 @@ export class Simulation extends GameLoopBase {
         return -300;
     }
     static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos) {
-        return new Vec2(scale(Math.random(), max, min), scale(Math.random(), max, min));
+        let x = scale(Math.random(), max, min);
+        let y = scale(Math.random(), max, min);
+        if (x < 0) {
+            x -= 50;
+        }
+        else {
+            x += 50;
+        }
+        if (y < 0) {
+            y -= 50;
+        }
+        else {
+            y += 50;
+        }
+        return new Vec2(x, y);
     }
     addBody(body) {
         this.bodies.set(body.id, body);
