@@ -202,6 +202,7 @@ export class DynamicBody implements IBody {
     public integrate(dt: number) {
         if (this.static) {
             this.pos = Vec2.zero;
+            this.vel = Vec2.zero;
         } else {
             this.pos.add(this.vel.mul(dt), true);
             this.vel.add(this.acc.mul(dt), true);       
