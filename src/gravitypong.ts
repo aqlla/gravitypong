@@ -224,7 +224,7 @@ export class Simulation extends GameLoopBase {
     private framerate: number = 0;
 
     private constructor() { 
-        super({ timeStep: 0.05 });
+        super({ timeStep: 0.005 });
     }
 
     public static getInstance(n: number): Simulation {
