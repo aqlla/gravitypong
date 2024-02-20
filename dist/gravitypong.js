@@ -117,12 +117,12 @@ export class DynamicBody {
     }
     static getRandomMass(max = DynamicBody.max_mass, min = DynamicBody.min_mass) {
         const uniform = Math.random();
-        const beta_left = (uniform < 0.5) ? 2 * uniform : 2 * (1 - uniform);
-        return scale(beta_left, max, min);
+        // const beta_left = (uniform < 0.5) ? 2*uniform : 2*(1-uniform);
+        return scale(uniform, max, min);
     }
     // 100.000.000x 
     static get max_mass() {
-        return 2000000000;
+        return 100000000000;
     }
     static get min_mass() {
         return 1;
@@ -162,7 +162,7 @@ export class Simulation extends GameLoopBase {
             Simulation.instance = new Simulation();
             // Sun
             Simulation.instance.addBody(new DynamicBody({
-                m: DynamicBody.max_mass * 3000,
+                m: DynamicBody.max_mass * 300,
                 pos: new Vec2(0, 0),
             }));
             for (let i = 0; i < n; i++) {
@@ -170,7 +170,7 @@ export class Simulation extends GameLoopBase {
                 const distanceFromOrigin = pos.magnitudeSquared;
                 const body = new DynamicBody({
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 350000, -pos.x / distanceFromOrigin * 350000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 500000, -pos.x / distanceFromOrigin * 500000),
                 });
                 Simulation.instance.addBody(body);
             }
