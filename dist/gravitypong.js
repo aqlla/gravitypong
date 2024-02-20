@@ -162,7 +162,7 @@ export class Simulation extends GameLoopBase {
             Simulation.instance = new Simulation();
             // Sun
             Simulation.instance.addBody(new DynamicBody({
-                m: DynamicBody.max_mass * 200,
+                m: DynamicBody.max_mass * 1200,
                 pos: new Vec2(0, 0),
             }));
             for (let i = 0; i < n; i++) {
@@ -170,7 +170,7 @@ export class Simulation extends GameLoopBase {
                 const distanceFromOrigin = pos.magnitudeSquared;
                 const body = new DynamicBody({
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 110000, -pos.x / distanceFromOrigin * 110000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 150000, -pos.x / distanceFromOrigin * 150000),
                 });
                 Simulation.instance.addBody(body);
             }
