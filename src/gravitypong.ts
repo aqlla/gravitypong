@@ -235,7 +235,7 @@ export class Simulation extends GameLoopBase {
 
                 const body = new DynamicBody({ 
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 800, -pos.x / distanceFromOrigin * 800),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 2500, -pos.x / distanceFromOrigin * 2500),
                 })
 
                 Simulation.instance.addBody(body);
@@ -251,11 +251,11 @@ export class Simulation extends GameLoopBase {
 
     // 100.000.000x 
     public static get max_pos(): number {
-        return 200;
+        return 300;
     }
 
     public static get min_pos(): number {
-        return -200;
+        return -300;
     }
 
     public static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos): Vec2 {
