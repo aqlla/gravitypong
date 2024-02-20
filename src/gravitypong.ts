@@ -78,11 +78,13 @@ function updateAcceleration2(bodies: BodyList) {
     }
 
     for (const { b1, b2 } of collisions) {
+        const stat = b1.static || b2.static;
+
         const newBody = new DynamicBody({
             m: b1.m + b2.m,
-            pos: b1.pos, //Vec2.mid(b1.pos, b2.pos),
-            vel: DynamicBody.collisionMomentum(b1, b2),
-            static: b1.static || b2.static
+            pos: stat? Vec2.zero : b1.pos, //Vec2.mid(b1.pos, b2.pos),
+            vel: stat? Vec2.zero : DynamicBody.collisionMomentum(b1, b2),
+            static: stat
         });
 
         // console.log("Collision:");
