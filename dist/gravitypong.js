@@ -44,7 +44,7 @@ function updateAcceleration2(bodies) {
             const distanceSquared = r.magnitudeSquared;
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
-            if (distance < (b1.r + b2.r) * 800 && !bodysInCollisionsList(collisions, b1, b2)) {
+            if (distance < (b1.r + b2.r) * 1000 && !bodysInCollisionsList(collisions, b1, b2)) {
                 // collide
                 b1.acc = Vec2.zero;
                 b2.acc = Vec2.zero;
@@ -122,7 +122,7 @@ export class DynamicBody {
     }
     // 100.000.000x 
     static get max_mass() {
-        return 100000000000;
+        return 10000000000;
     }
     static get min_mass() {
         return 1;
