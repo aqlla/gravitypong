@@ -91,9 +91,9 @@ export class DynamicBody {
             'id': this.id,
             'm': this.m,
             'r': this.r,
-            'p': this.pos.toString(),
-            'v': this.vel.toString(),
-            'a': this.acc.toString()
+            // 'p': this.pos.toString(),
+            // 'v': this.vel.toString(),
+            // 'a': this.acc.toString()
         });
     }
     static collisionMomentum(b1, b2) {
@@ -155,7 +155,7 @@ export class Simulation extends GameLoopBase {
             Simulation.instance = new Simulation();
             // Sun
             Simulation.instance.addBody(new DynamicBody({
-                m: DynamicBody.max_mass,
+                m: DynamicBody.max_mass * 100,
                 pos: new Vec2(0, 0),
             }));
             for (let i = 0; i < n; i++) {
@@ -163,7 +163,7 @@ export class Simulation extends GameLoopBase {
                 const distanceFromOrigin = pos.magnitudeSquared;
                 const body = new DynamicBody({
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 1000, -pos.x / distanceFromOrigin * 1000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 800, -pos.x / distanceFromOrigin * 800),
                 });
                 Simulation.instance.addBody(body);
             }
@@ -175,10 +175,10 @@ export class Simulation extends GameLoopBase {
     }
     // 100.000.000x 
     static get max_pos() {
-        return 100;
+        return 200;
     }
     static get min_pos() {
-        return -100;
+        return -200;
     }
     static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos) {
         return new Vec2(scale(Math.random(), max, min), scale(Math.random(), max, min));
