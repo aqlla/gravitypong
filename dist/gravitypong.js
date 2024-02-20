@@ -117,7 +117,7 @@ export class DynamicBody {
     }
     // 100.000.000x 
     static get max_mass() {
-        return 500000000;
+        return 1000000000;
     }
     static get min_mass() {
         return 1;
@@ -143,7 +143,7 @@ export class DynamicBody {
 DynamicBody.idIncrementor = 1;
 export class Simulation extends GameLoopBase {
     constructor() {
-        super({ timeStep: 0.001 });
+        super({ timeStep: 0.002 });
         this.bodies = new Map();
     }
     static getInstance(n) {

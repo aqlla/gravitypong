@@ -172,7 +172,7 @@ export class DynamicBody implements IBody {
 
     // 100.000.000x 
     public static get max_mass(): number {
-        return 500000000;
+        return 1000000000;
     }
 
     public static get min_mass(): number {
@@ -209,7 +209,7 @@ export class Simulation extends GameLoopBase {
     private bodies: BodyList = new Map<number, DynamicBody>();
 
     private constructor() { 
-        super({ timeStep: 0.001 });
+        super({ timeStep: 0.002 });
     }
 
     public static getInstance(n: number): Simulation {
