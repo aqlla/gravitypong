@@ -279,7 +279,7 @@ export class Simulation extends GameLoopBase {
         if (y < 0) {
             y -= 1000;
         } else {
-            y += 4500;
+            y += 500;
         }
 
         return new Vec2(x, y);
