@@ -59,7 +59,7 @@ function updateAcceleration2(bodies: BodyList) {
             const distance = Math.sqrt(distanceSquared) * DISTANCE_SCALE;
             // console.log(distance)
             
-            if (distance < (b1.r + b2.r) * 5 && !bodysInCollisionsList(collisions, b1, b2)) {
+            if (distance < (b1.r + b2.r) * 10 && !bodysInCollisionsList(collisions, b1, b2)) {
                 // collide
                 b1.acc = Vec2.zero;
                 b2.acc = Vec2.zero;
@@ -172,7 +172,7 @@ export class DynamicBody implements IBody {
 
     // 100.000.000x 
     public static get max_mass(): number {
-        return 100000000;
+        return 500000000;
     }
 
     public static get min_mass(): number {
@@ -238,11 +238,11 @@ export class Simulation extends GameLoopBase {
 
     // 100.000.000x 
     public static get max_pos(): number {
-        return 250;
+        return 350;
     }
 
     public static get min_pos(): number {
-        return -250;
+        return -350;
     }
 
     public static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos): Vec2 {
