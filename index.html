@@ -38,7 +38,7 @@
             fill(c);
             if (s && s.bodies) {
                 for (const b of s.bodies.values()) {
-                    circle(b.pos.x / 8 + 500, b.pos.y / 8 + 500, b.r / 8);
+                    circle(b.pos.x / 16 + 500, b.pos.y / 16 + 500, b.r / 10);
                 }
             } else {
                 s = window["sim"]
