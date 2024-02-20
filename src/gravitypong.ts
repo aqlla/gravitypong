@@ -188,11 +188,11 @@ export class DynamicBody implements IBody {
     }
 
     public static get max_radius(): number {
-        return 10;
+        return 12;
     }
 
     public static get min_radius(): number {
-        return 1;
+        return 4;
     }
 
     public static get raw_max_radius(): number {
