@@ -143,7 +143,7 @@ export class DynamicBody {
 DynamicBody.idIncrementor = 1;
 export class Simulation extends GameLoopBase {
     constructor() {
-        super({ timeStep: 0.002 });
+        super({ timeStep: 0.001 });
         this.bodies = new Map();
     }
     static getInstance(n) {
@@ -154,7 +154,7 @@ export class Simulation extends GameLoopBase {
                 const distanceFromOrigin = pos.magnitude;
                 const body = new DynamicBody({
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 100, -pos.x / distanceFromOrigin * 100),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 500, -pos.x / distanceFromOrigin * 500),
                 });
                 Simulation.instance.addBody(body);
             }
@@ -166,10 +166,10 @@ export class Simulation extends GameLoopBase {
     }
     // 100.000.000x 
     static get max_pos() {
-        return 100;
+        return 200;
     }
     static get min_pos() {
-        return -100;
+        return -200;
     }
     static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos) {
         return new Vec2(scale(Math.random(), max, min), scale(Math.random(), max, min));
