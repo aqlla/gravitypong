@@ -223,7 +223,7 @@ export class Simulation extends GameLoopBase {
     private bodies: BodyList = new Map<number, DynamicBody>();
 
     private constructor() { 
-        super({ timeStep: 0.005 });
+        super({ timeStep: 0.05 });
     }
 
     public static getInstance(n: number): Simulation {
@@ -258,11 +258,11 @@ export class Simulation extends GameLoopBase {
 
     // 100.000.000x 
     public static get max_pos(): number {
-        return 500;
+        return 800;
     }
 
     public static get min_pos(): number {
-        return -500;
+        return -800;
     }
 
     public static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos): Vec2 {
