@@ -38,7 +38,7 @@
             fill(c);
             if (s && s.bodies) {
                 document.getElementById("count").textContent = s.bodyCount;
-                document.getElementById("framerate").textContent = s.frameRate;
+                document.getElementById("framerate").textContent = s.framerate;
                 
                 for (const b of s.bodies.values()) {
                     circle(b.pos.x / 24 + 500, b.pos.y / 24 + 500, Math.max(1, b.r / 20));
