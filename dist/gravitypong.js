@@ -31,7 +31,7 @@ function bodysInCollisionsList(collisions, body1, body2) {
     return found;
 }
 function updateAcceleration2(bodies) {
-    const DISTANCE_SCALE = 1000;
+    const DISTANCE_SCALE = 2000;
     const DISTANCE_MIN = 1;
     const collisions = [];
     const bodiesArr = Array.from(bodies);
@@ -154,7 +154,7 @@ export class Simulation extends GameLoopBase {
                 const distanceFromOrigin = pos.magnitude;
                 const body = new DynamicBody({
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 1000, -pos.x / distanceFromOrigin * 1000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 500, -pos.x / distanceFromOrigin * 500),
                 });
                 Simulation.instance.addBody(body);
             }
@@ -166,10 +166,10 @@ export class Simulation extends GameLoopBase {
     }
     // 100.000.000x 
     static get max_pos() {
-        return 250;
+        return 100;
     }
     static get min_pos() {
-        return -250;
+        return -100;
     }
     static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos) {
         return new Vec2(scale(Math.random(), max, min), scale(Math.random(), max, min));
