@@ -143,7 +143,7 @@ export class DynamicBody {
 DynamicBody.idIncrementor = 1;
 export class Simulation extends GameLoopBase {
     constructor() {
-        super({ timeStep: 0.002 });
+        super({ timeStep: 0.005 });
         this.bodies = new Map();
     }
     static getInstance(n) {
