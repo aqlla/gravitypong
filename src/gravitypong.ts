@@ -216,7 +216,7 @@ export class Simulation extends GameLoopBase {
     private bodies: BodyList = new Map<number, DynamicBody>();
 
     private constructor() { 
-        super({ timeStep: 0.001 });
+        super({ timeStep: 0.002 });
     }
 
     public static getInstance(n: number): Simulation {
@@ -235,7 +235,7 @@ export class Simulation extends GameLoopBase {
 
                 const body = new DynamicBody({ 
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 100000, -pos.x / distanceFromOrigin * 100000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 20000, -pos.x / distanceFromOrigin * 20000),
                 })
 
                 Simulation.instance.addBody(body);
