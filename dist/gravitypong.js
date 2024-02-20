@@ -191,16 +191,16 @@ export class Simulation extends GameLoopBase {
         let x = scale(Math.random(), max, min);
         let y = scale(Math.random(), max, min);
         if (x < 0) {
-            x -= 50;
+            x -= 150;
         }
         else {
-            x += 50;
+            x += 150;
         }
         if (y < 0) {
-            y -= 50;
+            y -= 150;
         }
         else {
-            y += 50;
+            y += 150;
         }
         return new Vec2(x, y);
     }
