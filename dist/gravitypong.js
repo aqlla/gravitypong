@@ -170,7 +170,7 @@ export class Simulation extends GameLoopBase {
                 const distanceFromOrigin = pos.magnitudeSquared;
                 const body = new DynamicBody({
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 100000, -pos.x / distanceFromOrigin * 100000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 300000, -pos.x / distanceFromOrigin * 300000),
                 });
                 Simulation.instance.addBody(body);
             }
@@ -182,25 +182,25 @@ export class Simulation extends GameLoopBase {
     }
     // 100.000.000x 
     static get max_pos() {
-        return 800;
+        return 500;
     }
     static get min_pos() {
-        return -800;
+        return -500;
     }
     static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos) {
         let x = scale(Math.random(), max, min);
         let y = scale(Math.random(), max, min);
         if (x < 0) {
-            x -= 1500;
+            x -= 500;
         }
         else {
-            x += 1600;
+            x += 2000;
         }
         if (y < 0) {
             y -= 750;
         }
         else {
-            y += 1500;
+            y += 2500;
         }
         return new Vec2(x, y);
     }
