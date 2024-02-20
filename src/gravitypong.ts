@@ -218,11 +218,11 @@ export class Simulation extends GameLoopBase {
 
             for (let i = 0; i < n; i++) {
                 const pos = Simulation.getRandomPos();
-                const distanceFromOrigin = pos.magnitudeSquared;
+                const distanceFromOrigin = pos.magnitude;
 
                 const body = new DynamicBody({ 
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 5000, -pos.x / distanceFromOrigin * 5000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 1000, -pos.x / distanceFromOrigin * 1000),
                 })
 
                 Simulation.instance.addBody(body);
