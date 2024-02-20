@@ -150,8 +150,10 @@ export class Simulation extends GameLoopBase {
         if (!Simulation.instance) {
             Simulation.instance = new Simulation();
             for (let i = 0; i < n; i++) {
+                const pos = Simulation.getRandomPos();
                 const body = new DynamicBody({
-                    pos: Simulation.getRandomPos()
+                    pos: pos,
+                    vel: new Vec2(pos.y / 10, pos.x / 10),
                 });
                 Simulation.instance.addBody(body);
             }
