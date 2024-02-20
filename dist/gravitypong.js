@@ -128,10 +128,10 @@ export class DynamicBody {
         return 1;
     }
     static get max_radius() {
-        return 12;
+        return 24;
     }
     static get min_radius() {
-        return 4;
+        return 8;
     }
     static get raw_max_radius() {
         return DynamicBody.getRadiusFromMass(DynamicBody.max_mass, false);
