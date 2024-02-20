@@ -122,7 +122,7 @@ export class DynamicBody {
     }
     // 100.000.000x 
     static get max_mass() {
-        return 10000000000;
+        return 500000000;
     }
     static get min_mass() {
         return 1;
@@ -170,7 +170,7 @@ export class Simulation extends GameLoopBase {
                 const distanceFromOrigin = pos.magnitudeSquared;
                 const body = new DynamicBody({
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 1000000, -pos.x / distanceFromOrigin * 1000000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 100000, -pos.x / distanceFromOrigin * 100000),
                 });
                 Simulation.instance.addBody(body);
             }
