@@ -137,7 +137,7 @@ export class DynamicBody {
     //     return Vec2(...[this.m * ])
     // }
     integrate(dt) {
-        if (this.static) {
+        if (!this.static) {
             this.pos.add(this.vel.mul(dt), true);
             this.vel.add(this.acc.mul(dt), true);
         }
