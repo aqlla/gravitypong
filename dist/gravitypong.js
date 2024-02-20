@@ -183,10 +183,10 @@ export class Simulation extends GameLoopBase {
     }
     // 100.000.000x 
     static get max_pos() {
-        return 800;
+        return 1000;
     }
     static get min_pos() {
-        return -800;
+        return -1000;
     }
     static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos) {
         let x = scale(Math.random(), max, min);
@@ -195,10 +195,10 @@ export class Simulation extends GameLoopBase {
             x -= 500;
         }
         else {
-            x += 4000;
+            x += 2000;
         }
         if (y < 0) {
-            y -= 3000;
+            y -= 1000;
         }
         else {
             y += 4500;

@@ -259,11 +259,11 @@ export class Simulation extends GameLoopBase {
 
     // 100.000.000x 
     public static get max_pos(): number {
-        return 800;
+        return 1000;
     }
 
     public static get min_pos(): number {
-        return -800;
+        return -1000;
     }
 
     public static getRandomPos(max = Simulation.max_pos, min = Simulation.min_pos): Vec2 {
@@ -273,11 +273,11 @@ export class Simulation extends GameLoopBase {
         if (x < 0) {
             x -= 500;
         } else {
-            x += 4000;
+            x += 2000;
         }
 
         if (y < 0) {
-            y -= 3000;
+            y -= 1000;
         } else {
             y += 4500;
         }
