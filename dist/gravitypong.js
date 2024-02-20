@@ -162,7 +162,7 @@ export class Simulation extends GameLoopBase {
             Simulation.instance = new Simulation();
             // Sun
             Simulation.instance.addBody(new DynamicBody({
-                m: DynamicBody.max_mass * 1000,
+                m: DynamicBody.max_mass * 5000,
                 pos: new Vec2(0, 0),
             }));
             for (let i = 0; i < n; i++) {
