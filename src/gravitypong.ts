@@ -221,6 +221,7 @@ type BodyList = Map<number, DynamicBody>;
 export class Simulation extends GameLoopBase {
     private static instance: Simulation;
     private bodies: BodyList = new Map<number, DynamicBody>();
+    private framerate: number = 0;
 
     private constructor() { 
         super({ timeStep: 0.05 });
@@ -242,7 +243,7 @@ export class Simulation extends GameLoopBase {
 
                 const body = new DynamicBody({ 
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 800000, -pos.x / distanceFromOrigin * 800000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 700000, -pos.x / distanceFromOrigin * 700000),
                 })
 
                 Simulation.instance.addBody(body);
@@ -289,7 +290,10 @@ export class Simulation extends GameLoopBase {
     }
 
     public update() {
+        const startMs = Date.now();
         updateAcceleration2(this.bodies);
+        const elapsedMs = Date.now() - startMs;
+        this.framerate = 1000 / elapsedMs;
         this.updateDerivatives();
     }
 

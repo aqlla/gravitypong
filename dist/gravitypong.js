@@ -156,6 +156,7 @@ export class Simulation extends GameLoopBase {
     constructor() {
         super({ timeStep: 0.05 });
         this.bodies = new Map();
+        this.framerate = 0;
     }
     static getInstance(n) {
         if (!Simulation.instance) {
@@ -170,7 +171,7 @@ export class Simulation extends GameLoopBase {
                 const distanceFromOrigin = pos.magnitudeSquared;
                 const body = new DynamicBody({
                     pos: pos,
-                    vel: new Vec2(pos.y / distanceFromOrigin * 800000, -pos.x / distanceFromOrigin * 800000),
+                    vel: new Vec2(pos.y / distanceFromOrigin * 700000, -pos.x / distanceFromOrigin * 700000),
                 });
                 Simulation.instance.addBody(body);
             }
@@ -208,7 +209,10 @@ export class Simulation extends GameLoopBase {
         this.bodies.set(body.id, body);
     }
     update() {
+        const startMs = Date.now();
         updateAcceleration2(this.bodies);
+        const elapsedMs = Date.now() - startMs;
+        this.framerate = 1000 / elapsedMs;
         this.updateDerivatives();
     }
     updateDerivatives() {

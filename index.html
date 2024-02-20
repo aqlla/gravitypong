@@ -7,11 +7,6 @@
 
     <script>
         let s = null;
-        let countSpan = null;
-
-        function getCountSpan() {
-            return countSpan? countSpan : document.getElementById("count");
-        }
 
         function initSim() {
             if (!s) {
@@ -42,7 +37,9 @@
 
             fill(c);
             if (s && s.bodies) {
-                getCountSpan().textContent = s.bodyCount;
+                document.getElementById("count").textContent = s.bodyCount;
+                document.getElementById("framerate").textContent = s.frameRate;
+                
                 for (const b of s.bodies.values()) {
                     circle(b.pos.x / 24 + 500, b.pos.y / 24 + 500, Math.max(1, b.r / 20));
                 }
