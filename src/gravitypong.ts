@@ -42,7 +42,7 @@ function bodysInCollisionsList(collisions: CollisionPair[], body1, body2): boole
 }
 
 function updateAcceleration2(bodies: BodyList) {
-    const DISTANCE_SCALE = 5000;
+    const DISTANCE_SCALE = 6500;
     const DISTANCE_MIN = 1;
 
     const collisions: CollisionPair[] = []; 
@@ -184,7 +184,7 @@ export class DynamicBody implements IBody {
     }
 
     public static get min_mass(): number {
-        return 10000;
+        return 100000;
     }
 
     public static get max_radius(): number {

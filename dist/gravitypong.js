@@ -31,7 +31,7 @@ function bodysInCollisionsList(collisions, body1, body2) {
     return found;
 }
 function updateAcceleration2(bodies) {
-    const DISTANCE_SCALE = 5000;
+    const DISTANCE_SCALE = 6500;
     const DISTANCE_MIN = 1;
     const collisions = [];
     const bodiesArr = Array.from(bodies);
@@ -125,7 +125,7 @@ export class DynamicBody {
         return 50000000;
     }
     static get min_mass() {
-        return 10000;
+        return 100000;
     }
     static get max_radius() {
         return 32;

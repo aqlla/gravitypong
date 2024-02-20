@@ -41,7 +41,7 @@
                 document.getElementById("framerate").textContent = s.framerate;
                 
                 for (const b of s.bodies.values()) {
-                    circle(b.pos.x / 20 + 500, b.pos.y / 20 + 500, Math.max(1, b.r / 24));
+                    circle(b.pos.x / 20 + 500, b.pos.y / 20 + 500, Math.max(2, b.r / 24));
                 }
             } else {
                 s = window["sim"]
