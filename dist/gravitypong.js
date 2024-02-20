@@ -115,7 +115,9 @@ export class DynamicBody {
         }
     }
     static getRandomMass(max = DynamicBody.max_mass, min = DynamicBody.min_mass) {
-        return scale(Math.random(), max, min);
+        const uniform = Math.random();
+        const beta_left = (uniform < 0.5) ? 2 * uniform : 2 * (1 - uniform);
+        return scale(beta_left, max, min);
     }
     // 100.000.000x 
     static get max_mass() {
