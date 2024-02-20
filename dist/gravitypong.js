@@ -118,17 +118,17 @@ export class DynamicBody {
     static getRandomMass(max = DynamicBody.max_mass, min = DynamicBody.min_mass) {
         const uniform = Math.random();
         const beta_left = (uniform < 0.5) ? 2 * uniform : 2 * (1 - uniform);
-        return scale(beta_left, max, min);
+        return scale(uniform, max, min);
     }
     // 100.000.000x 
     static get max_mass() {
         return 50000000;
     }
     static get min_mass() {
-        return 1000;
+        return 10000;
     }
     static get max_radius() {
-        return 24;
+        return 32;
     }
     static get min_radius() {
         return 8;

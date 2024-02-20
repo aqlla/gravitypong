@@ -175,7 +175,7 @@ export class DynamicBody implements IBody {
     public static getRandomMass(max = DynamicBody.max_mass, min = DynamicBody.min_mass): number {
         const uniform = Math.random();
         const beta_left = (uniform < 0.5) ? 2*uniform : 2*(1-uniform);
-        return scale(beta_left, max, min);
+        return scale(uniform, max, min);
     }
 
     // 100.000.000x 
@@ -184,11 +184,11 @@ export class DynamicBody implements IBody {
     }
 
     public static get min_mass(): number {
-        return 1000;
+        return 10000;
     }
 
     public static get max_radius(): number {
-        return 24;
+        return 32;
     }
 
     public static get min_radius(): number {
