@@ -223,7 +223,7 @@ export class Simulation extends GameLoopBase {
     private bodies: BodyList = new Map<number, DynamicBody>();
 
     private constructor() { 
-        super({ timeStep: 0.005 });
+        super({ timeStep: 0.002 });
     }
 
     public static getInstance(n: number): Simulation {
