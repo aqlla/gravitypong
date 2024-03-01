@@ -3,19 +3,30 @@ export interface IOrderedPair<TNum = number> {
     y: TNum;
 }
 
-export type VectorMathOperand<TNum = number, TVec2 = Vec2GenericBase<TNum>> = TVec2 | TNum | [TNum, TNum];
+export type VectorMathOperand<
+        TNum = number, 
+        TVec2 = Vec2GenericBase<TNum>> 
+    = TVec2 | TNum | [TNum, TNum];
 
-export type NDimFn<TLhs extends VectorMathOperand<TNum>, TRhs extends VectorMathOperand<TNum>, TReturn extends VectorMathOperand<TNum>, TNum = number> 
+export type NDimFn<
+        TLhs extends VectorMathOperand<TNum>, 
+        TRhs extends VectorMathOperand<TNum>, 
+        TReturn extends VectorMathOperand<TNum>, 
+        TNum = number> 
     = (lhs: TLhs, rhs: TRhs) => TReturn; 
 
-export type VectorFn<TLhs extends VectorMathOperand<TNum>, TRhs extends VectorMathOperand<TNum>, TNum = number> 
+export type VectorFn<
+        TLhs extends VectorMathOperand<TNum>, 
+        TRhs extends VectorMathOperand<TNum>, 
+        TNum = number> 
     = NDimFn<TLhs, TRhs, [TNum, TNum], TNum>;
 
-export type ScalarFn<TLhs extends Vec2GenericBase<TNum>, TRhs extends VectorMathOperand<TNum>, TNum = number> 
+export type ScalarFn<
+        TLhs extends Vec2GenericBase<TNum>, 
+        TRhs extends VectorMathOperand<TNum>, 
+        TNum = number> 
     = NDimFn<TLhs, TRhs, TNum, TNum>;
 
-// export type TVector2 extends Vec2GenericBase<TNum>
-    
     
 export class Vec2GenericBase<TNum = number> implements IOrderedPair<TNum> {
     private components: [TNum, TNum];
@@ -24,16 +35,16 @@ export class Vec2GenericBase<TNum = number> implements IOrderedPair<TNum> {
         this.components = [x, y];
     }
 
-    get x(): TNum {
+    public get x(): TNum {
         return this.components[0];
     }
     
-    protected set x(val: TNum) {
-        this.components[0] = val;
+    public get y(): TNum {
+        return this.components[1];
     }
 
-    get y(): TNum {
-        return this.components[1];
+    protected set x(val: TNum) {
+        this.components[0] = val;
     }
 
     protected set y(val: TNum) {
@@ -61,13 +72,15 @@ export class Vec2GenericBase<TNum = number> implements IOrderedPair<TNum> {
         }
     }
 
-   
-
     public eq(other: Vec2GenericBase<TNum>): boolean {
         return this.x == other.x && this.y == other.y;
     }
 
-    toString(): string {
+    public static is(val1: Vec2GenericBase, val2: Vec2GenericBase): boolean {
+        return Object.is(val1, val2)
+    }
+
+    public toString(): string {
         return "[" + this.x + ", " + this.y + "]"; 
     }
 }

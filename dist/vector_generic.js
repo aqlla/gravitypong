@@ -1,4 +1,3 @@
-// export type TVector2 extends Vec2GenericBase<TNum>
 export class Vec2GenericBase {
     constructor(x, y) {
         this.components = [x, y];
@@ -6,11 +5,11 @@ export class Vec2GenericBase {
     get x() {
         return this.components[0];
     }
-    set x(val) {
-        this.components[0] = val;
-    }
     get y() {
         return this.components[1];
+    }
+    set x(val) {
+        this.components[0] = val;
     }
     set y(val) {
         this.components[1] = val;
@@ -31,6 +30,9 @@ export class Vec2GenericBase {
     }
     eq(other) {
         return this.x == other.x && this.y == other.y;
+    }
+    static is(val1, val2) {
+        return Object.is(val1, val2);
     }
     toString() {
         return "[" + this.x + ", " + this.y + "]";
