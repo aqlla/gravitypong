@@ -1,7 +1,8 @@
-import { GameLoopBase } from "./gameloop.js";
+import { SimLoop } from "./gameloop.js";
 import { Vec2 } from "./vector.js";
 import { clamp, scale } from "./util.js";
 import { MassiveBody, IBody } from "./body.js";
+import { Drawable, MakeDrawable, Shape, injectDrawable } from "ui-adapter.js";
 
 
 class SerialMap<TVal = IBody> extends Map<number, TVal> {
@@ -66,8 +67,8 @@ function bindOutput(elementId: string) {
     }
 }
 
-export class Simulation extends GameLoopBase {
-    private static instance: Simulation;
+export class Simulation extends SimLoop {
+    private static _instance: Simulation;
     private bodies: BodyList = new Map<number, MassiveBody>();
     private framerate: number = 0;
 
@@ -98,10 +99,24 @@ export class Simulation extends GameLoopBase {
         }
     }
 
-    public static getInstance(args: SimulationArgs): Simulation {
-        if (!Simulation.instance)
-            Simulation.instance = new Simulation(args);
-        return Simulation.instance;
+    public static instance(args: SimulationArgs): Simulation {
+        if (!Simulation._instance)
+            Simulation._instance = new Simulation(args);
+        return Simulation._instance;
+    }
+
+    public update() {
+        const startMs = Date.now();
+        this.updateAcceleration2(this.bodies);
+        const elapsedMs = Date.now() - startMs;
+        this.framerate = 1000 / elapsedMs;
+        this.updateDerivatives();
+    }
+
+    private updateDerivatives() {
+        for (const b of this.bodies.values()) {
+            b.integrate(this.timeStepSec);
+        }
     }
     
     public updateAcceleration2(bodies: BodyList) {
@@ -238,26 +253,12 @@ export class Simulation extends GameLoopBase {
         this.bodies.set(body.id, body);
     }
 
-    public update() {
-        const startMs = Date.now();
-        this.updateAcceleration2(this.bodies);
-        const elapsedMs = Date.now() - startMs;
-        this.framerate = 1000 / elapsedMs;
-        this.updateDerivatives();
-    }
-
-    private updateDerivatives() {
-        for (const b of this.bodies.values()) {
-            b.integrate(this.timeStepSec);
-        }
-    }
-
     public get bodyCount(): number {
         return this.bodies.size;
     }
 
-    public get drawables(): BodyList {
-        return this.bodies;
+    public get drawables(): Drawable[] {
+        return Array.from(this.bodies.values()).map(injectDrawable(Shape.Circle, '#666666'));
     }
 
     // 100.000.000x 
@@ -270,3 +271,5 @@ export class Simulation extends GameLoopBase {
     }
 
 }
+
+

@@ -1,34 +1,65 @@
-export class GameLoopBase {
+/**
+ * Abstract class for basic game or simulation operation.
+ *
+ * Performs the following process loop with a giver interval between iterations:
+ * - Listen for & apply input
+ * - Run game update
+ * - Render frame? - (maybe do this async separately)
+ *
+ */
+export class SimLoop {
+    timerId;
+    timeStepSec;
+    startTime;
+    _isRunning = false;
+    _isStarted = false;
     constructor(args) {
-        this.timerId = null;
-        this._processList = [
-            this.update,
-            // this.render
-        ];
         this.timeStepSec = args.timeStep;
         this.startTime = Date.now();
     }
     start() {
         this.timerId = setInterval(() => {
-            for (const fn of this._processList)
-                fn.call(this);
+            this.update();
+            this._isRunning = false;
         }, this.timeStepSec * 1000);
+        this._isStarted = true;
     }
     pause() {
         if (this.timerId !== null) {
             clearInterval(this.timerId);
-            this.timerId = null;
+            this.timerId = undefined;
+            this._isRunning = true;
         }
     }
     resume() {
-        if (this.timerId === null)
+        if (this.timerId === null) {
             this.start();
+            this._isRunning = false;
+        }
+    }
+    togglePause() {
+        if (this._isRunning) {
+            this.pause();
+        }
+        else {
+            this.resume();
+        }
+        return this.isRunning;
+    }
+    get config() {
+        return {};
+    }
+    get isRunning() {
+        return this._isRunning;
+    }
+    get isStarted() {
+        return this._isStarted;
     }
     update() {
         throw new Error("[GameLoopBase.update]: Method not implemented.");
     }
-    render() {
-        throw new Error("[GameLoopBase.render]: Method not implemented.");
+    get drawables() {
+        throw new Error("[GameLoopBase.drawables]: Method not implemented.");
     }
     get elapsed() {
         return Date.now() - this.startTime;

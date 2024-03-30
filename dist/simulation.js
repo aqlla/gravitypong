@@ -1,12 +1,10 @@
-import { GameLoopBase } from "./gameloop.js";
+import { SimLoop } from "./gameloop.js";
 import { Vec2 } from "./vector.js";
 import { scale } from "./util.js";
 import { MassiveBody } from "./body.js";
+import { Shape, injectDrawable } from "ui-adapter.js";
 class SerialMap extends Map {
-    constructor() {
-        super(...arguments);
-        this._keys = [];
-    }
+    _keys = [];
     nextKey(currentKey) {
         let cursor = currentKey;
         while (!this.has(++cursor))
@@ -48,11 +46,12 @@ function bindOutput(elementId) {
         }
     }
 }
-export class Simulation extends GameLoopBase {
+export class Simulation extends SimLoop {
+    static _instance;
+    bodies = new Map();
+    framerate = 0;
     constructor(args) {
         super({ timeStep: 0.01 });
-        this.bodies = new Map();
-        this.framerate = 0;
         // Sun
         if (args.sun ?? false) {
             this.addBody(new MassiveBody({
@@ -71,10 +70,22 @@ export class Simulation extends GameLoopBase {
             this.addBody(body);
         }
     }
-    static getInstance(args) {
-        if (!Simulation.instance)
-            Simulation.instance = new Simulation(args);
-        return Simulation.instance;
+    static instance(args) {
+        if (!Simulation._instance)
+            Simulation._instance = new Simulation(args);
+        return Simulation._instance;
+    }
+    update() {
+        const startMs = Date.now();
+        this.updateAcceleration2(this.bodies);
+        const elapsedMs = Date.now() - startMs;
+        this.framerate = 1000 / elapsedMs;
+        this.updateDerivatives();
+    }
+    updateDerivatives() {
+        for (const b of this.bodies.values()) {
+            b.integrate(this.timeStepSec);
+        }
     }
     updateAcceleration2(bodies) {
         const DISTANCE_SCALE = 6500;
@@ -193,23 +204,11 @@ export class Simulation extends GameLoopBase {
     addBody(body) {
         this.bodies.set(body.id, body);
     }
-    update() {
-        const startMs = Date.now();
-        this.updateAcceleration2(this.bodies);
-        const elapsedMs = Date.now() - startMs;
-        this.framerate = 1000 / elapsedMs;
-        this.updateDerivatives();
-    }
-    updateDerivatives() {
-        for (const b of this.bodies.values()) {
-            b.integrate(this.timeStepSec);
-        }
-    }
     get bodyCount() {
         return this.bodies.size;
     }
     get drawables() {
-        return this.bodies;
+        return Array.from(this.bodies.values()).map(injectDrawable(Shape.Circle, '#666666'));
     }
     // 100.000.000x 
     static get max_pos() {

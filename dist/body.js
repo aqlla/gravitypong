@@ -1,9 +1,16 @@
 import { Vec2 } from "./vector.js";
 import { scale } from "./util.js";
+// @Drawable(Shape.Circle, "#666666")
 export class MassiveBody {
+    m;
+    r;
+    pos;
+    vel;
+    acc;
+    static idIncrementor = 1;
+    _id = 0;
+    _static = false;
     constructor(args) {
-        this._id = 0;
-        this._static = false;
         this.m = args.m ?? MassiveBody.getRandomMass();
         this.r = args.r ?? MassiveBody.getRadiusFromMass(this.m);
         this.vel = args.vel ?? Vec2.zero;
@@ -92,4 +99,3 @@ export class MassiveBody {
         return `id: ${this.id}\n m: ${this.m}\n r: ${this.r}\n pos: ${this.pos} vel: ${this.vel}`;
     }
 }
-MassiveBody.idIncrementor = 1;

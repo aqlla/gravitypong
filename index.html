@@ -13,15 +13,25 @@
                 const Simulation = window["Simulation"];
 
                 if (Simulation) {
-                    s = Simulation.getInstance({ n: 1000, sun: true });
+                    s = Simulation.instance({ n: 1000, sun: true });
                     s.start();
+
+                    document.addEventListener("keypress", (event) => {
+                        if (event.key === " ") {
+                            if (s.isPaused) {
+                                s.resume();
+                            } else {
+                                s.pause();
+                            }
+                        }
+                    }); 
                 }
             } 
         }
 
         function setup() {
             frameRate(20);
-            createCanvas(1000, 1000);
+            createCanvas(window.innerWidth, 1000);
         }        
         
         function draw() {
@@ -29,8 +39,8 @@
             const c = color(65);
 
             initSim();
-
             fill(c);
+
             if (s && s.bodies) {
                 document.getElementById("count").textContent = s.bodyCount;
                 document.getElementById("framerate").textContent = s.framerate;
@@ -44,16 +54,52 @@
             }
         }
     </script>
+
+    <style>
+        body { 
+            margin: 0; 
+            font-family: "helvetica";
+        }
+
+        #wrapper {
+            width: 100%;
+            margin: 0;
+        }
+
+        header {
+            width: 100%;
+        }
+
+        #content {
+            width: 100%;
+        }
+
+        .hud {
+            position: absolute;
+        }
+    </style>
 </head>
 <body>
-    <h3>Sim</h3>
-    <div id="controls">
+    <div id="wrapper">
 
-    </div>
-    <div id="outputs">
-        <ul>Count: <span id="count"></span></ul>
-        <ul>FPS:   <span id="framerate"></span></ul>
-    </div>
+        <header>
+            <h3 id="title">Sim</h3>
 
-    <div id="p5sketch"></div>
+            <nav></nav>
+        </header>
+
+        <div id="content">
+            <div class="hud">
+                <div id="config" class="hud-section"></div>
+                <div id="controls" class="hud-section"></div>
+                <div id="telemetry" class="hud-section">
+
+                    <ul>Count: <span data-bind-sim-property="count"></span></ul>
+                    <ul>FPS:   <span id="framerate"></span></ul>
+                </div>
+            </div>
+        
+            <div id="p5sketch"></div>
+        </div>
+    </div>    
 </body>

@@ -1,14 +1,15 @@
 import { Vec2 } from "./vector.js";
 import { scale } from "./util.js";
+import { Drawable, Shape, MakeDrawable, Positional } from "./ui-adapter.js";
 
-export interface Identafiable<Tid> {
-    readonly id: Tid
-    eq(other: Identafiable<Tid>): boolean
+export interface Identafiable<T> {
+    readonly id: T
+    eq(other: Identafiable<T>): boolean
 }
 
 export interface SerialIdentifiable extends Identafiable<number> {}
 
-interface IBodyBase {
+interface IBodyBase extends Positional {
     m: number
     r: number
     pos: Vec2
@@ -30,7 +31,8 @@ type DynamicBodyCtorArgs = {
     isStatic?: boolean
 }
 
-export class MassiveBody implements IBody, SerialIdentifiable {
+// @Drawable(Shape.Circle, "#666666")
+export class MassiveBody implements IBody, SerialIdentifiable, Positional {
     m: number
     r: number
     pos: Vec2
