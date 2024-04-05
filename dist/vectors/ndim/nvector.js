@@ -1,101 +1,5 @@
-import { zipWith } from "./fn/zip.js";
-/**
- * Addition. Calculates the sum of two vectors of N dimensions.
- *
- * @typeParam {number} NDim the dimensionality of the vectors.
- *
- * @param augend the first vector, the augend.
- * @param addend the second vector, the addend.
- *
- * @returns sum of the provided vectors.
- */
-export const add = (augend, addend) => zipWith((a, b) => a + b, augend, addend);
-/**
- * Subtraction. Calculates the difference between two vectors of N dimensions.
- *
- * @param minuend the vector to subtract from.
- * @param subtrahend the vector to subtract from the minuend.
- *
- * @returns the vector difference between the minuend and subtrahend.
- */
-export const sub = (minuend, subtrahend) => zipWith((a, b) => a - b, minuend, subtrahend);
-/**
- * Calculates the product of an N-dimensional vector and a scalar.
- *
- * @param vector the vector-valued multiplicand.
- * @param scalar the scalar-valued multiplier.
- *
- * @returns the product of the vector multiplicand and the scalar multiplier.
- */
-export const mul = (vector, scalar) => vector.map(component => component * scalar);
-/**
- * Calculates the quotiend of an N-dimensional vector and a scalar.
- *
- * @param vector the vactor-valued dividend.
- * @param scalar the scalar-valued divisor.
- *
- * @returns the quotient of a vector dividend and a scalar divisor.
- */
-export const div = (vector, scalar) => {
-    if (scalar === 0) {
-        console.error("Div by 0");
-    }
-    return vector.map(component => component / scalar);
-};
-/**
- * Calculates the dot product of two N-dimensional vectors.
- *
- * @param l
- * @param r
- *
- * @returns the dot product of N-Dim vectors l and r.
- */
-export const dot = (l, r) => l.reduce((acc, curr, index) => acc + curr * r[index], 0);
-/**
- * Calculates the squared magnitude of an n-dimensional vector.
- *
- * @param vector the vector whose squared magnitude will be found.
- *
- * @returns the square of the magnitude of the provided N-Dimensional vector.
- */
-export const magnitudeSquared = (vector) => vector.reduce((acc, val) => acc + val * val, 0);
-/**
- * Calculates the magnitude of an n-dimensional vector.
- *
- * @param vector the vector whose magnitude will be found.
- *
- * @returns the magnitude of the provided N-Dimensional vector.
- */
-export const magnitude = (vector) => Math.sqrt(magnitudeSquared(vector));
-/**
- * Calculates the unit vector of an n-dimensional vector.
- *
- * @param vector the vector to calclulate the unit vector from.
- *
- * @returns the unit vector of the given n-dimensional vector.
- */
-export const unit = (vector) => {
-    const mag = magnitude(vector);
-    return vector.map(val => val / mag);
-};
-/**
- * Calculates the angle between 2 n-dimensional vectors.
- *
- * @param l one of the vectors
- * @param r the other one of the vectors
- *
- * @returns the angle between the 2 provided n-dimensional vectors.
- */
-export const angle = (l, r) => Math.acos(dot(l, r) / (magnitude(l) * magnitude(r)));
-/**
- * Calculates the midpoint of 2 n-dimensional vectors.
- *
- * @param l one of the vectors
- * @param r the other one of the vectors
- *
- * @returns the midpoint of the 2 provided n-dimensional vectors.
- */
-export const midpoint = (l, r) => zipWith((a, b) => (a + b) / 2, l, r);
+import { add, angle, div, dot, magnitude, magnitudeSquared, map, midpoint, mul, sub, unit } from "./math.js";
+const VectorComponentLabels = ["x", "y", "z", "w"];
 /**
  * Represents an N-dimensional vector with type-safe component management.
  * Allows for the creation and manipulation of vectors with a predefined number of dimensions.
@@ -105,8 +9,31 @@ export const midpoint = (l, r) => zipWith((a, b) => (a + b) / 2, l, r);
 export class NDimVector {
     components;
     constructor(...components) {
+        const self = this;
         this.components = components;
+        const proxied = new Proxy(this, {
+            get(target, prop) {
+                const nProp = Number(prop);
+                if (!(prop in target)) {
+                    return self.getItem(nProp);
+                }
+                return target[prop];
+            },
+            set(target, prop, newValue) {
+                const nProp = Number(prop);
+                if (!(prop in target)) {
+                    return self.components[nProp] = newValue;
+                }
+                return target[prop] = newValue;
+            }
+        });
+        Object.defineProperties(proxied, Object.getOwnPropertyDescriptors(this.mappedComponents));
+        return proxied;
     }
+    // public static make<N extends Dim>(...components: NVecLike<N>): 
+    //         InstanceType<typeof NDimVector<N>> & NDimVectorComponents<N> {
+    //     return new NDimVector<N>(...components) as NDimVectorComponents<N> & InstanceType<typeof NDimVector<N>>
+    // } 
     /**
      * Retrieves a specific item (component) from the vector by its index.
      *
@@ -116,6 +43,10 @@ export class NDimVector {
     getItem(index) {
         return this.components[index];
     }
+    setItem(index, value) {
+        this.components[index] = value;
+        return this.components[index];
+    }
     /**
      * Provides the length (dimensionality) of the vector.
      *
@@ -123,6 +54,9 @@ export class NDimVector {
      */
     get length() {
         return this.components.length;
+    }
+    static from(tuple) {
+        return new NDimVector(...tuple);
     }
     /**
      * Returns unwrapped vector components. If a plain array or tuple is received, it will be returned, but
@@ -134,11 +68,11 @@ export class NDimVector {
     static getComponents(vector) {
         return vector instanceof NDimVector ? vector.components : vector;
     }
-    static zero(length) {
-        return new NDimVector(...Array(length).fill(0));
+    get mappedComponents() {
+        return this.components.reduce((acc, comp, i) => ({ ...acc, [VectorComponentLabels[i]]: comp }), {});
     }
-    get zero() {
-        return NDimVector.zero(this.length);
+    map(fn) {
+        return new NDimVector(...map(fn, this.components));
     }
     // ********************** Math Helpers *****************************
     /**

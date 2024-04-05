@@ -1,18 +1,16 @@
-import { MakeDrawable, Shape } from './ui-adapter.js';
-import { Simulation as GravitySim } from './simulation.js';
-import { Vec2 } from './vector.js';
-import { MassiveBody } from './body.js';
-// import "p5/lib/addons/p5.dom";
-window["Simulation"] = GravitySim;
-window["Vec2"] = Vec2;
-const DrawableBody = MakeDrawable(Shape.Circle, "#666666")(MassiveBody);
-const d = new DrawableBody({ pos: Vec2.zero });
-function testDrawable(p) {
-    console.log("testDrawable");
-    console.log(p.color);
-    console.log(p.shape);
+import { NewSim as Sim } from './sim/newsim.js';
+function bindOutput(elementId) {
+    const el = document.getElementById(elementId);
+    function _wrapper(target, _context) {
+        function _decorated(...args) {
+            const result = target.call(this, ...args);
+            if (el) {
+                el.innerText = result.toString();
+            }
+        }
+    }
 }
-testDrawable(d);
+window["Simulation"] = Sim;
 /**
  * Manages IO for the app.
  *
@@ -25,13 +23,13 @@ testDrawable(d);
  *  - display, and store persistent configuration and allow input to edit
  *    configuration values
  */
-class WebViewController {
-    game;
-    config = {};
-    constructor() {
-        this.game = GravitySim.instance({ n: 1000 });
-    }
-}
+// class WebViewController implements GameLoopController<GravitySim> {
+//   game: GravitySim
+//   config: {} = {}
+//   constructor() {
+//     this.game = GravitySim.instance({ n: 1000 });
+//   }
+// }
 class ScratchGameViewController {
     game;
     view;
@@ -40,7 +38,11 @@ class ScratchGameViewController {
     frameRate;
     // Should probably be a singleton, class is just for encapsulation/ns
     constructor() {
-        this.game = GravitySim.instance({ n: 1000 });
+        this.game = Sim.instance({
+            n: 50,
+            timeStepSeconds: 0.1,
+            bounds: [1000, window.innerWidth]
+        });
     }
     setupCanvas(p5) {
         p5.frameRate(20);

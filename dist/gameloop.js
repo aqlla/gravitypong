@@ -55,12 +55,6 @@ export class SimLoop {
     get isStarted() {
         return this._isStarted;
     }
-    update() {
-        throw new Error("[GameLoopBase.update]: Method not implemented.");
-    }
-    get drawables() {
-        throw new Error("[GameLoopBase.drawables]: Method not implemented.");
-    }
     get elapsed() {
         return Date.now() - this.startTime;
     }

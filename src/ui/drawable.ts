@@ -1,5 +1,6 @@
-import { FixedArray } from "fixed-array";
-import { Vec2 } from "vector";
+import { NDimVector } from "../vectors/ndim/nvector.js";
+import { Tuple } from "../utils/types.js";
+import { Positional } from "sim/kinetic-body.js";
 
 type RGB = `rgb(${number}, ${number}, ${number})`;
 type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
@@ -7,8 +8,8 @@ type HEX = `#${string}`;
 
 export type Color = RGB | RGBA | HEX;
 
-export type Point = Vec2
-export type Vertices2D<N extends number> = FixedArray<Point, N>
+export type Point = NDimVector<2>
+export type Vertices2D<N extends number> = Tuple<N, Point>
 
 export enum Shape {
   Circle,
@@ -17,11 +18,7 @@ export enum Shape {
   Rectangle,
 }
 
-export interface Positional {
-  readonly pos: Vec2
-}
-
-export interface Drawable extends Positional {
+export interface Drawable extends Positional<2> {
   readonly color: Color
   readonly shape: Shape
 }
@@ -29,7 +26,7 @@ export interface Drawable extends Positional {
 export type Constructor<T> = new (...args: any[]) => T
 
 export function MakeDrawable(shape: Shape, color: Color) {
-  return <T extends Constructor<Positional>>(target: T) => {
+  return <T extends Constructor<Positional<2>>>(target: T) => {
     return class extends target implements Drawable {
       public readonly shape: Shape
       public readonly color: Color
@@ -45,7 +42,7 @@ export function MakeDrawable(shape: Shape, color: Color) {
 
 
 export function injectDrawable(shape: Shape, color: Color) {
-  return <T extends Positional>(target: T): T & Drawable => {
+  return <T extends Positional<2>>(target: T): T & Drawable => {
     Object.defineProperties(target, {
       shape: {
         value: shape,

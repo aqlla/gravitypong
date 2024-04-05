@@ -1,36 +1,15 @@
 import { SimLoop } from "./gameloop.js";
-import { scale } from "./utils/math.js";
+import { scale } from "../utils/math.js";
 import { MassiveBody } from "./kinetic-body.js";
-import { Shape, injectDrawable } from "./ui-adapter.js";
-import { NDimVector } from "./n-dim-vector.js";
-function getCollisionWith(collisions, b1, b2) {
-    for (const c of collisions) {
-        for (const b of c) {
-            if (b.eq(b1) || b.eq(b2)) {
-                return c;
-            }
-        }
-    }
-    return null;
-}
-function bindOutput(elementId) {
-    const el = document.getElementById(elementId);
-    function _wrapper(target, _context) {
-        function _decorated(...args) {
-            const result = target.call(this, ...args);
-            if (el) {
-                el.innerText = result.toString();
-            }
-        }
-    }
-}
+import { Shape, injectDrawable } from "../ui/drawable.js";
+import { NDimVector } from "../vectors/ndim/nvector.js";
 const dimensions = 2;
 export class Simulation extends SimLoop {
-    static _instance;
     bodies = new Map();
-    framerate = 0;
+    timeStepSec;
     constructor(args) {
-        super({ timeStep: 0.1 });
+        super();
+        this.timeStepSec = args.timeStepSec ?? 0.1;
         // Sun
         if (args.sun ?? false) {
             this.addBody(new MassiveBody({
@@ -54,19 +33,17 @@ export class Simulation extends SimLoop {
             this.addBody(body);
         }
     }
-    static instance(args) {
-        if (!Simulation._instance)
-            Simulation._instance = new Simulation(args);
-        return Simulation._instance;
+    makeBody(args) {
+        const b = new MassiveBody({
+            dimensions: dimensions
+        });
+        return b;
     }
     get zeroVector() {
-        return NDimVector.zero(dimensions);
+        return new NDimVector(0, 0);
     }
-    update() {
-        const startMs = Date.now();
+    updatePhysics() {
         this.updateAcceleration2(this.bodies);
-        const elapsedMs = Date.now() - startMs;
-        this.framerate = 1000 / elapsedMs;
         this.updateDerivatives();
     }
     updateDerivatives() {
@@ -95,7 +72,7 @@ export class Simulation extends SimLoop {
                     // collide 
                     // b1.acc = Vec2.zero;
                     // b2.acc = Vec2.zero;
-                    const coll = getCollisionWith(collisions, b1, b2);
+                    const coll = this.getCollisionWith(collisions, b1, b2);
                     collidedIds.push(b1.id, b2.id);
                     if (coll !== null) {
                         if (coll.includes(b1)) {
@@ -136,10 +113,20 @@ export class Simulation extends SimLoop {
             this.handleCollisions(collisions, bodies);
         }
     }
+    getCollisionWith(collisions, b1, b2) {
+        for (const c of collisions) {
+            for (const b of c) {
+                if (b.eq(b1) || b.eq(b2)) {
+                    return c;
+                }
+            }
+        }
+        return null;
+    }
     centerOfMass(bodies) {
         const [b1, ...bs] = [...bodies];
         if (b1 === undefined) {
-            return NDimVector.zero(dimensions);
+            return new NDimVector(0, 0);
         }
         else if (bs.length === 0) {
             return b1.pos;
@@ -192,11 +179,9 @@ export class Simulation extends SimLoop {
     addBody(body) {
         this.bodies.set(body.id, body);
     }
-    get bodyCount() {
-        return this.bodies.size;
-    }
-    get drawables() {
-        return Array.from(this.bodies.values()).map(injectDrawable(Shape.Circle, '#666666'));
+    *entities() {
+        for (const b of this.bodies.values())
+            yield injectDrawable(Shape.Circle, '#666666')(b);
     }
     // 100.000.000x 
     static get max_pos() {

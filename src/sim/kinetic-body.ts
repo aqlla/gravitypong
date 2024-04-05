@@ -1,60 +1,60 @@
-import { Vec2 } from "./vector.js";
-import { scale } from "./util.js";
-import { Drawable, Shape, MakeDrawable, Positional } from "./ui-adapter.js";
+import { SerialIdentifiable } from "../utils/util.js"
+import { scale } from "../utils/math.js"
+import { NDimVector } from "../vectors/ndim/nvector.js"
+import { Dim } from "vectors/ndim/types.js"
 
-export interface Identafiable<T> {
-    readonly id: T
-    eq(other: Identafiable<T>): boolean
+
+export interface Positional<NDim extends Dim> {
+    readonly pos: NDimVector<NDim>
 }
 
-export interface SerialIdentifiable extends Identafiable<number> {}
-
-interface IBodyBase extends Positional {
+interface KineticBody<NDim extends Dim> extends Positional<NDim> {
     m: number
     r: number
-    pos: Vec2
-    vel: Vec2
-    acc: Vec2    
-}
-
-export interface IBody extends IBodyBase, SerialIdentifiable {
-    readonly isStatic: boolean
+    vel: NDimVector<NDim>
+    acc: NDimVector<NDim>    
     // readonly momentum: Vec2
 }
 
-type DynamicBodyCtorArgs = {
-    m?: number
-    r?: number
-    pos: Vec2
-    vel?: Vec2
-    acc?: Vec2
-    isStatic?: boolean
+export interface SimulationBody<NDim extends Dim> extends KineticBody<NDim>, SerialIdentifiable {
+    readonly isStatic: boolean
 }
 
+type DynamicBodyCtorArgs<NDim extends Dim> = { dimensions: NDim } & Partial<SimulationBody<NDim>>
+
+type NVec2 = NDimVector<2>
+
 // @Drawable(Shape.Circle, "#666666")
-export class MassiveBody implements IBody, SerialIdentifiable, Positional {
+export class MassiveBody<NDim extends Dim> implements SimulationBody<NDim>, SerialIdentifiable {
     m: number
     r: number
-    pos: Vec2
-    vel: Vec2
-    acc: Vec2
+    pos: NDimVector<NDim>
+    vel: NDimVector<NDim>
+    acc: NDimVector<NDim>
+
+    dimensions: Readonly<NDim>
     
     private static idIncrementor = 1 
     private _id: number = 0
     protected _static: boolean = false
 
-    constructor(args: DynamicBodyCtorArgs) {
+    constructor(args: DynamicBodyCtorArgs<NDim>) {
+        this.dimensions = args.dimensions
         this.m = args.m ?? MassiveBody.getRandomMass()
         this.r = args.r ?? MassiveBody.getRadiusFromMass(this.m)
-        this.vel = args.vel ?? Vec2.zero
-        this.acc = args.acc ?? Vec2.zero
-        this.pos = args.pos
+        this.vel = args.vel ?? this.zeroVector
+        this.acc = args.acc ?? this.zeroVector
+        this.pos = args.pos ?? this.zeroVector
 
         this._static = args.isStatic ?? false
         this._id = MassiveBody.idIncrementor++
     }
 
-    public get momentum(): Vec2 {
+    public get zeroVector(): NDimVector<NDim> {
+        return new NDimVector<NDim>(0, 0)
+    }
+
+    public get momentum(): NDimVector<NDim> {
         return this.vel.mul(this.m)
     }
 
@@ -62,7 +62,7 @@ export class MassiveBody implements IBody, SerialIdentifiable, Positional {
         return this._id
     }
 
-    public eq(other: IBody): boolean {
+    public eq(other: SimulationBody<NDim>): boolean {
         return this.id == other.id
     }
 
@@ -117,7 +117,7 @@ export class MassiveBody implements IBody, SerialIdentifiable, Positional {
         return scale(mass, max, min)
     }
 
-    public static collisionMomentum(b1: IBody, b2: IBody): Vec2 {
+    public static collisionMomentum<N extends Dim>(b1: SimulationBody<N>, b2: SimulationBody<N>): NDimVector<N> {
         const mSum = b1.m + b2.m
         // const vx = (b1.m * b1.vel.x + b2.m * b2.vel.x) / mSum
         // const vy = (b1.m * b1.vel.y + b2.m * b2.vel.y) / mSum
@@ -126,22 +126,25 @@ export class MassiveBody implements IBody, SerialIdentifiable, Positional {
         return momentum1.add(momentum2)
     }
 
-    public static nCollisionMomentum(bodies: IBody[]): Vec2 {
+    public static nCollisionMomentum<N extends Dim>(bodies: SimulationBody<N>[]): NDimVector<N> {
+        // TODO: find better way to get zero vector without cheating like this...
+        const zeroVector = new NDimVector<N>(0, 0)
+
         const totalMass = bodies.reduce((acc, b) => acc + b.m, 0)
         return bodies.reduce(
-            (acc, b) => acc.add(b.vel.mul(b.m / totalMass)), Vec2.zero)
+            (acc, b) => acc.add(b.vel.mul(b.m / totalMass)), zeroVector)
     }
 
     public integrate(dt: number) {
         if (this.isStatic) {
-            this.pos = Vec2.zero
-            this.vel = Vec2.zero
+            this.pos = this.zeroVector
+            this.vel = this.zeroVector
         } else {
-            this.pos.add(this.vel.mul(dt), true)
-            this.vel.add(this.acc.mul(dt), true)       
+            this.pos = this.pos.add(this.vel.mul(dt))
+            this.vel = this.vel.add(this.acc.mul(dt))       
         }
         
-        this.acc = Vec2.zero
+        this.acc = this.zeroVector
     }
 
     public toString(): string {

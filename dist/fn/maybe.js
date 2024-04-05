@@ -1,4 +1,6 @@
 "use strict";
+const none = { _type: 'none' };
+const some = (value) => ({ _type: 'some', value });
 // abstract class Either<L, R> {
 //     constructor(readonly value: L | R) {}
 //     static left<L>(value: L) {

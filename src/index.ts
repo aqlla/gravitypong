@@ -1,29 +1,23 @@
-import { MakeDrawable, Shape, Drawable } from './ui-adapter.js';
-import { Simulation as GravitySim } from './simulation.js';
-import { Vec2 } from './vector.js';
-import { MassiveBody } from './body.js';
-import { GameLoop } from 'gameloop.js';
-import { TODO } from 'util.js';
+import { NewSim as Sim } from './sim/newsim.js';
+import { GameLoop } from './sim/types.js';
+import { TODO } from './utils/types.js';
 
 import P5 from "p5";
-// import "p5/lib/addons/p5.dom";
 
 
-window["Simulation"] = GravitySim;
-window["Vec2"] = Vec2;
-
-
-const DrawableBody = MakeDrawable(Shape.Circle, "#666666")(MassiveBody)
-const d = new DrawableBody({ pos: Vec2.zero })
-
-function testDrawable(p: Drawable) {
-  console.log("testDrawable")
-  console.log(p.color)
-  console.log(p.shape)
+function bindOutput(elementId: string) {
+  const el: HTMLElement | null = document.getElementById(elementId);
+  function _wrapper(target: any, _context: any) {
+      function _decorated(this: any, ...args: any[]) {
+          const result = target.call(this, ...args);
+          if (el) {
+              el.innerText = result.toString();
+          }
+      }
+  }
 }
 
-testDrawable(d)
-
+window["Simulation"] = Sim;
 
 interface GameLoopController<TGame extends GameLoop> {
   config: {}
@@ -42,16 +36,16 @@ interface GameLoopController<TGame extends GameLoop> {
  *  - display, and store persistent configuration and allow input to edit 
  *    configuration values 
  */
-class WebViewController implements GameLoopController<GravitySim> {
-  game: GravitySim
-  config: {} = {}
+// class WebViewController implements GameLoopController<GravitySim> {
+//   game: GravitySim
+//   config: {} = {}
 
-  constructor() {
-    this.game = GravitySim.instance({ n: 1000 });
-  }
+//   constructor() {
+//     this.game = GravitySim.instance({ n: 1000 });
+//   }
 
 
-}
+// }
 
 
 class ScratchGameViewController {
@@ -64,7 +58,11 @@ class ScratchGameViewController {
   
   // Should probably be a singleton, class is just for encapsulation/ns
   private constructor() {
-    this.game = GravitySim.instance({ n: 1000 })
+    this.game = Sim.instance({ 
+      n: 50,
+      timeStepSeconds: 0.1,
+      bounds: [1000, window.innerWidth]
+     })
   }
 
   public setupCanvas(p5: P5) {
