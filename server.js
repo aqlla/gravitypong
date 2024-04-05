@@ -13,9 +13,14 @@ switch (process.env.ENVIRONMENT) {
         const _dirname = path.dirname(_filename);
         
         app.use('/dist', express.static(path.join(_dirname, 'dist')));
+        app.use('/styles', express.static(path.join(_dirname, 'styles')));
 
         app.get('/', (req, res) => {
             res.sendFile(path.join(_dirname, '/index.html'));
+        });
+
+        app.get('/index.js', (req, res) => {
+            res.sendFile(path.join(_dirname, '/index.js'));
         });
 
         app.listen(port);

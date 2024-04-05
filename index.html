@@ -2,318 +2,111 @@
 <head>
     <title>gravitypong</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.js"></script>
+    <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.js"></script>
+    <script type="application/javascript" src="index.js"></script>
     <script type="module" src="/dist/index.js"></script>
 
-    <script>
-        const height = window.innerHeight
-        const width = window.innerWidth
-        let margin = 0
-
-        let s = null;
-        let pause = false;
-        
-        let dark, red
-
-        function initSim() {
-            if (!s) {
-                const Simulation = window["Simulation"];
-
-                if (Simulation) {
-                    s = Simulation.instance({
-                        n: 100,
-                        timeStepSeconds: 0.1,
-                        bounds: [width, height],
-                    });
-                    margin = s.margin
-                    s.start();
-
-                    document.addEventListener("keypress", (event) => {
-                        if (event.key === " ") {
-                            s.togglePause()
-                            pause = s.running
-                        }
-                    }); 
-                }
-            } 
-        }
-
-        function setup() {
-            frameRate(20);
-            createCanvas(width, height);
-            
-
-            dark = color(65);
-            red = color("red");
-
-        }        
-        
-        function draw() {
-            if (!s) initSim()
-
-            if (s && s.running) {
-                background(229);
-
-                if (s.bodies) {
-                    document.getElementById("count").textContent = s.bodies.size;
-                    document.getElementById("framerate").textContent = s.framerate;
-
-                    for (const b of s.entities()) {
-                        if (b.id % 20 == 0) fill(red)
-                        else fill(dark)
-                        circle(
-                            b.pos.components[0], 
-                            b.pos.components[1], 
-                            Math.max(2, b.r));
-                    }
-
-                    noFill();
-
-                    rect(margin, margin, width - 2 * margin, height - 2 * margin)
-                }
-            }
-            
-        }
-
-        const toggleClass = (id, classname) => 
-            document.getElementById(id).classList.toggle(classname)
-    </script>
-
-    <style>
-        body { 
-            margin: 0; 
-            overflow: hidden;
-            font-family: "helvetica";
-        }
-
-        #wrapper {
-            width: 100%;
-            margin: 0;
-        }
-
-        header {
-            width: 100%;
-        }
-
-        #content {
-            width: 100%;
-        }
-
-        #p5sketch {
-            float: right;
-        }
-
-        .sidebar {
-            position: fixed;
-            width: 350px;
-            top: 0;
-            bottom: 0;
-        }
-
-
-        #sidebar-head {
-            position: relative;
-            height: 70px;
-            background-color: #333;
-        }
-
-        #sidebar-head > * {
-            position: absolute;
-            margin: 20px;
-        }
-
-        #sidebar-head > #sidebar-title {
-            font-size: 25px;
-            color: #ccc;
-        }
-
-        .sidebar > #sidebar-content {
-            position: relative;
-            height: -moz-available;
-            height: -webkit-fill-available; 
-            height: fill-available;
-            /* margin: 20px; */
-            overflow-y: scroll;
-
-
-            background-color: rgb(169 169 169 / 70%);
-            backdrop-filter: blur(4px);
-            border-right: 2px solid #333;
-        }
-
-        .sidebar.sidebar-closed {
-            left: -350px;
-        }
-
-        .sidebar.sidebar-closed #sidebar-head {
-            left: 100px;
-        }
-
-        .sidebar.sidebar-closed #sidebar-head > #sidebar-title {
-            left: 250px;
-        }
-
-        .center-text {
-            text-align: center;
-        }
-
-        .flex-col {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .flex-row {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-evenly;
-            text-align: center;
-
-            margin: 5px 0;
-        }
-
-        .list-item {
-            display: flex;
-            margin: 5px;
-
-            margin: 10px 2% 15px;
-            border: 2px solid #333;
-        }
-
-        .list-item > .title {
-            margin-top: 2px;
-            padding-bottom: 2px;
-            font-size: 20px;
-            border-bottom: 1px solid #666;
-            text-align: center;
-        }
-
-        .list-item > .content {
-            display: flex;
-            justify-content: space-evenly;
-        }
-
-        .list-item > .content > * {
-            display: flex;
-            padding: 5px;
-            flex-grow: 2;
-            justify-content: space-evenly;
-        }
-
-        .list-item > .content > .left {
-            flex-grow: 0;
-            flex-shrink: 2;
-            border-right: 1px solid #666;
-        }
-
-        .prevent-select {
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            user-select: none; 
-        }
-
-    </style>
+    <link rel="stylesheet" href="styles/basic.css">
+    <link rel="stylesheet" href="styles/flex.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
 </head>
 <body>
-    <div id="wrapper">
-        <div id="content">
-            <div id="sidebar" class="sidebar" onclick="toggleClass('sidebar', 'sidebar-closed')">
-                <div id="sidebar-head" class="prevent-select">
-                    <div id="sidebar-title">Boids</div>
-                </div>
-
-                <div id="sidebar-content">
-
-                    <div class="config flex-col">
-                        <div class="list-item flex-col">
-                            <div class="title">Telemetry</div>
-                            <div id="telemetry" class="hud-section flex-col content">
-                                <ul>Count: <span id="count" data-bind-sim-property="count"></span></ul>
-                                <ul>FPS:   <span id="framerate"></span></ul>
-                            </div>
-                        </div>
-                        
-                        <div class="flex-col list-item">
-                            <div class="title">Boid Separation</div>
-                            <div class="content flex-row">
-                                <div class="left flex-col">
-
-                                    <div class="toggle flex-col">
-                                        Enable<input type="checkbox">
-                                    </div>
-                                </div>
-
-                                <div class="flex-col">
-                                    <div class="slider flex-col">
-                                        Factor
-                                        <input type="range" min="1" max="100" value="50" class="slider">
-                                    </div>
-                                    
-                                    <div class="slider flex-col">
-                                        View Distance
-                                        <input type="range" min="1" max="100" value="50" class="slider">
-                                    </div>  
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="flex-col list-item">
-                            <div class="title">Boid Cohesion</div>
-                            <div class="content flex-row">
-                                <div class="left flex-col">
-
-                                    <div class="toggle flex-col">
-                                        Enable<input type="checkbox">
-                                    </div>
-                                </div>
-
-                                <div class="flex-col">
-                                    <div class="slider flex-col">
-                                        Factor
-                                        <input type="range" min="1" max="100" value="50" class="slider">
-                                    </div>
-                                    
-                                    <div class="slider flex-col">
-                                        View Distance
-                                        <input type="range" min="1" max="100" value="50" class="slider">
-                                    </div>  
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="flex-col list-item">
-                            <div class="title">Boid Alignment</div>
-                            <div class="content flex-row">
-                                <div class="left flex-col">
-
-                                    <div class="toggle flex-col">
-                                        Enable<input type="checkbox">
-                                    </div>
-                                </div>
-
-                                <div class="flex-col">
-                                    <div class="slider flex-col">
-                                        Factor
-                                        <input type="range" min="1" max="100" value="50" class="slider">
-                                    </div>
-                                    
-                                    <div class="slider flex-col">
-                                        View Distance
-                                        <input type="range" min="1" max="100" value="50" class="slider">
-                                    </div>  
-                                </div>
-                            </div>
-                        </div>
-
-                       
-                    </div>
-                </div>
+    <div class="wrapper w-100">
+        <div id="sidebar" class="sidebar" onclick="toggleClass('sidebar', 'sidebar-closed')">
+            <div id="sidebar-head" class="prevent-select">
+                <div id="sidebar-title">Boids</div>
             </div>
 
-            
-        
+            <div id="sidebar-content">
+
+                <div class="config flex-col">
+                    <div class="list-item flex-col">
+                        <div class="title">Telemetry</div>
+                        <div id="telemetry" class="hud-section flex-col content">
+                            <ul>Count: <span id="count" data-bind-sim-property="count"></span></ul>
+                            <ul>FPS:   <span id="framerate"></span></ul>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-col list-item">
+                        <div class="title">Boid Separation</div>
+                        <div class="content flex-row">
+                            <div class="left flex-col">
+
+                                <div class="toggle flex-col">
+                                    Enable<input type="checkbox">
+                                </div>
+                            </div>
+
+                            <div class="flex-col">
+                                <div class="slider flex-col">
+                                    Factor
+                                    <input type="range" min="1" max="100" value="50" class="slider">
+                                </div>
+                                
+                                <div class="slider flex-col">
+                                    View Distance
+                                    <input type="range" min="1" max="100" value="50" class="slider">
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="flex-col list-item">
+                        <div class="title">Boid Cohesion</div>
+                        <div class="content flex-row">
+                            <div class="left flex-col">
+
+                                <div class="toggle flex-col">
+                                    Enable<input type="checkbox">
+                                </div>
+                            </div>
+
+                            <div class="flex-col">
+                                <div class="slider flex-col">
+                                    Factor
+                                    <input type="range" min="1" max="100" value="50" class="slider">
+                                </div>
+                                
+                                <div class="slider flex-col">
+                                    View Distance
+                                    <input type="range" min="1" max="100" value="50" class="slider">
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="flex-col list-item">
+                        <div class="title">Boid Alignment</div>
+                        <div class="content flex-row">
+                            <div class="left flex-col">
+
+                                <div class="toggle flex-col">
+                                    Enable<input type="checkbox">
+                                </div>
+                            </div>
+
+                            <div class="flex-col">
+                                <div class="slider flex-col">
+                                    Factor
+                                    <input type="range" min="1" max="100" value="50" class="slider">
+                                </div>
+                                
+                                <div class="slider flex-col">
+                                    View Distance
+                                    <input type="range" min="1" max="100" value="50" class="slider">
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+
+                   
+                </div>
+            </div>
+        </div>
+        <div class="content w-100">
             <div id="p5sketch"></div>
         </div>
     </div>    

@@ -1,0 +1,33 @@
+body { 
+    margin: 0; 
+    overflow: hidden;
+    font-family: "helvetica";
+}
+
+header {
+    width: 100%;
+}
+
+#wrapper {
+    width: 100%;
+    margin: 0;
+}
+
+#p5sketch {
+    float: right;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+
+.center-text {
+    text-align: center;
+}
+
+.prevent-select {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none; 
+}
