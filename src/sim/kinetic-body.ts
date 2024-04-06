@@ -16,13 +16,11 @@ interface KineticBody<NDim extends Dim> extends Positional<NDim> {
     // readonly momentum: Vec2
 }
 
-export interface SimulationBody<NDim extends Dim> extends KineticBody<NDim>, SerialIdentifiable {
+export type SimulationBody<NDim extends Dim> = KineticBody<NDim> & SerialIdentifiable & {
     readonly isStatic: boolean
 }
 
 type DynamicBodyCtorArgs<NDim extends Dim> = { dimensions: NDim } & Partial<SimulationBody<NDim>>
-
-type NVec2 = NDimVector<2>
 
 // @Drawable(Shape.Circle, "#666666")
 export class MassiveBody<NDim extends Dim> implements SimulationBody<NDim>, SerialIdentifiable {
