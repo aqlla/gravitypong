@@ -1,5 +1,5 @@
-import { Tuple } from "../utils/types.js"
-import { Dim } from "../vectors/ndim/types.js"
+import { Tuple } from "../lib/types.js"
+import { Dim } from "../lib/vectors/ndim/types.js"
 import { Positional } from "./kinetic-body.js"
 
 

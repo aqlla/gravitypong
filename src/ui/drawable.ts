@@ -1,5 +1,5 @@
-import { NDimVector } from "../vectors/ndim/nvector.js";
-import { Tuple } from "../utils/types.js";
+import { NDimVector } from "../lib/vectors/ndim/nvector.js";
+import { Tuple } from "../lib/types.js";
 import { Positional } from "sim/kinetic-body.js";
 
 type RGB = `rgb(${number}, ${number}, ${number})`;

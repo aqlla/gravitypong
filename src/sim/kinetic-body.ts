@@ -1,7 +1,7 @@
-import { SerialIdentifiable } from "../utils/util.js"
-import { scale } from "../utils/math.js"
-import { NDimVector } from "../vectors/ndim/nvector.js"
-import { Dim } from "vectors/ndim/types.js"
+import { SerialIdentifiable } from "../lib/util.js"
+import { scale } from "../lib/math.js"
+import { NDimVector } from "../lib/vectors/ndim/nvector.js"
+import { Dim } from "../lib/vectors/ndim/types.js"
 
 
 export interface Positional<NDim extends Dim> {
@@ -12,7 +12,7 @@ interface KineticBody<NDim extends Dim> extends Positional<NDim> {
     m: number
     r: number
     vel: NDimVector<NDim>
-    acc: NDimVector<NDim>    
+    acc: NDimVector<NDim>
     // readonly momentum: Vec2
 }
 
@@ -31,8 +31,8 @@ export class MassiveBody<NDim extends Dim> implements SimulationBody<NDim>, Seri
     acc: NDimVector<NDim>
 
     dimensions: Readonly<NDim>
-    
-    private static idIncrementor = 1 
+
+    private static idIncrementor = 1
     private _id: number = 0
     protected _static: boolean = false
 
@@ -111,7 +111,7 @@ export class MassiveBody<NDim extends Dim> implements SimulationBody<NDim>, Seri
         } else if (uniform > 0.75) {
             mass *= 10
         }
-        
+
         return scale(mass, max, min)
     }
 
@@ -139,9 +139,9 @@ export class MassiveBody<NDim extends Dim> implements SimulationBody<NDim>, Seri
             this.vel = this.zeroVector
         } else {
             this.pos = this.pos.add(this.vel.mul(dt))
-            this.vel = this.vel.add(this.acc.mul(dt))       
+            this.vel = this.vel.add(this.acc.mul(dt))
         }
-        
+
         this.acc = this.zeroVector
     }
 

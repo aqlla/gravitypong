@@ -1,4 +1,4 @@
-import { Take, Tuple } from "../../utils/types.js"
+import { Take, Tuple } from "../../types.js"
 import { add, angle, div, dot, magnitude, magnitudeSquared, map, midpoint, mul, sub, unit } from "./math.js"
 import { Dim, NVec } from "./types.js"
 

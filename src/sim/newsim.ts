@@ -1,9 +1,9 @@
-import { NDimVector, Dim, add, sub, NVecLike } from "../vectors/ndim/index.js"
+import { NDimVector, Dim, add, sub, NVecLike } from "../lib/vectors/ndim/index.js"
 import { MassiveBody } from "./kinetic-body.js"
 import { SimLoop } from "./gameloop.js"
-import { Tuple } from "../utils/types.js"
-import { scale } from "../utils/math.js"
-import { Vector2 } from "../vectors/vector2.js"
+import { Tuple } from "../lib/types.js"
+import { scale } from "../lib/math.js"
+import { Vector2 } from "../lib/vectors/vector2.js"
 import { Boundaries, SimLoopArgs } from "./types.js"
 
 type NDim = 2

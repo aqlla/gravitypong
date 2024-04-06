@@ -1,5 +1,5 @@
-import { scale } from "../utils/math.js";
-import { NDimVector } from "../vectors/ndim/nvector.js";
+import { scale } from "../lib/math.js";
+import { NDimVector } from "../lib/vectors/ndim/nvector.js";
 // @Drawable(Shape.Circle, "#666666")
 export class MassiveBody {
     m;

@@ -1,8 +1,8 @@
-import { NDimVector } from "../vectors/ndim/index.js";
+import { NDimVector } from "../lib/vectors/ndim/index.js";
 import { MassiveBody } from "./kinetic-body.js";
 import { SimLoop } from "./gameloop.js";
-import { scale } from "../utils/math.js";
-import { Vector2 } from "../vectors/vector2.js";
+import { scale } from "../lib/math.js";
+import { Vector2 } from "../lib/vectors/vector2.js";
 const dimensions = 2;
 export class NewSim extends SimLoop {
     bodies = new Map();

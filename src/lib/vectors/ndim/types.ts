@@ -1,4 +1,4 @@
-import { Take, Tuple } from "../../utils/types.js"
+import { Take, Tuple } from "../../types.js"
 import { NDimVector } from "./nvector.js";
 
 const DimensionsArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] as const

@@ -1,4 +1,4 @@
-import { Take } from "../utils/types";
+import { Take } from "../types";
 
 /**
  * Extracts the first `N` elements from an array at runtime.

@@ -1,7 +1,7 @@
-import { TODO, Take } from "../utils/types.js"
-import { Configurable } from "../utils/util.js"
+import { TODO, Take } from "../lib/types.js"
+import { Configurable } from "../lib/util.js"
 import { Boundaries, GameLoop, PhysicsLoop } from "./types.js"
-import { Dim, Dims } from "../vectors/ndim/types.js"
+import { Dim, Dims } from "../lib/vectors/ndim/types.js"
 import { Positional } from "./kinetic-body.js"
 
 
@@ -90,16 +90,16 @@ export abstract class SimLoop implements GameLoop, Configurable, PhysicsLoop {
 
     public start() {
         const [canStart, failMsg] = this.canStart
-        
+
         if (canStart) {
             this.lastUpdateTimeMs = performance.now()
             SimLoop._isRunning = true
-            this.update()   
+            this.update()
         } else {
             console.error("FAILED TO START")
             console.info(failMsg)
         }
-        
+
     }
 
     public update(): void {
@@ -122,7 +122,7 @@ export abstract class SimLoop implements GameLoop, Configurable, PhysicsLoop {
     public pause() {
         if (this.running) {
             SimLoop._isRunning = false
-        } 
+        }
     }
 
     public togglePause(): boolean {

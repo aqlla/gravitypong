@@ -1,4 +1,4 @@
-import { Tuple } from "utils/types.js";
+import { Tuple } from "../../types.js";
 import { zipWith } from "../../fn/zip.js"
 import { Dim, NVec, NVecLike } from "./types.js";
 

@@ -1,10 +1,4 @@
-import { HtmlAttribute, HtmlAttributeConfig } from './ui/dom/types.js';
 import { NewSim as Simulation } from './sim/newsim.js';
-import P5 from "p5"
-import { group } from 'console';
-
-window["Simulation"] = Simulation;
-
 
 const $$ = document.getElementById
 const $in = (id) => document.getElementById(id) as HTMLInputElement
