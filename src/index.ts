@@ -60,7 +60,7 @@ const bindInputToProperty = <T, K extends keyof T>(object: T, propName: K, eleme
 class FuConfigGroup extends HTMLElement {
     static classNames = {
         group: 'config-group list-item flex-col',
-        title: 'title',
+        title: 'title center prevent-select',
         body: 'body flex-row',
         left: 'left flex-col',
         content: 'content-main flex-col',

@@ -23,7 +23,7 @@
 
                 <div id="config" class="config flex-col">
                     <div class="list-item flex-col">
-                        <div class="title">Telemetry</div>
+                        <div class="title center">Telemetry</div>
                         <div id="telemetry" class="hud-section flex-col content-wrapper">
                             <ul>Count: <span id="count"></span></ul>
                             <ul>FPS: <span id="framerate"></span></ul>
@@ -31,24 +31,26 @@
                     </div>
 
                     <div class="flex-col list-item">
-                        <div class="title">Boid Separation</div>
-                        <div class="content-wrapper flex-row">
+                        <div class="title center prevent-select">Boid Separation</div>
+                        <div class="body flex-row">
                             <div class="left flex-col">
                                 Enable<input name="separation-toggle" id="separationEnabled" type="checkbox">
                             </div>
 
                             <div class="flex-col content-main">
-                                Factor<input name="separation-factor" id="separationFactor" type="range" min="0.01" max="5"
-                                    value="0.1" class="slider">
-                                View Distance<input name=separation-range id=separationRange type=range min=0 max=300 value=20
-                                    class=slider>
+                                Factor<input name="separation-factor" id="separationFactor" type="range" min="0.01"
+                                    max="5" value="0.1" class="slider">
+                                    <output>0</output>
+                                View Distance<input name=separation-range id=separationRange type=range min=0 max=300
+                                    value=20 class=slider>
+                                    <output>0</output>
                             </div>
                         </div>
                     </div>
 
 
                     <div class="flex-col list-item">
-                        <div class="title">Boid Cohesion</div>
+                        <div class="title center">Boid Cohesion</div>
                         <div class="content flex-row">
                             <div class="left flex-col">
 

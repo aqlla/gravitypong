@@ -139,7 +139,7 @@ export class NewSim extends SimLoop {
         return body;
     }
     speedLimit(body) {
-        const maxSpeed = 120;
+        const maxSpeed = 150;
         const speed = body.vel.magnitude;
         if (speed > maxSpeed)
             body.vel = body.vel.div(speed).mul(maxSpeed);

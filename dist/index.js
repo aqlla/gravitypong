@@ -38,11 +38,11 @@ const bindInputToProperty = (object, propName, elementId) => {
         console.log("new: " + newValue);
     });
 };
-class ConfigGroup extends HTMLElement {
+class FuConfigGroup extends HTMLElement {
     static classNames = {
         group: 'config-group list-item flex-col',
         title: 'title',
-        wrapper: 'content-wrapper flex-row',
+        body: 'body flex-row',
         left: 'left flex-col',
         content: 'content-main flex-col',
         input: 'input flex-col',
@@ -57,16 +57,16 @@ class ConfigGroup extends HTMLElement {
     }
     makeBoidsForceConfigGroup = (force) => {
         const group = this.makeConfigGroup(force);
-        const wrapper = group.querySelector('.content-wrapper');
+        const body = group.querySelector('.body');
         return group;
     };
     makeConfigGroup = (title) => {
-        const groupEl = domo.make('div', { class: ConfigGroup.classNames['group'] });
-        const titleEl = domo.make('div', { class: ConfigGroup.classNames['title'] });
-        const wrapEl = domo.make('div', { class: ConfigGroup.classNames['wrapper'] });
+        const groupEl = domo.make('div', { class: FuConfigGroup.classNames['group'] });
+        const titleEl = domo.make('div', { class: FuConfigGroup.classNames['title'] });
+        const bodyEl = domo.make('div', { class: FuConfigGroup.classNames['body'] });
         titleEl.innerText = title;
         groupEl.appendChild(titleEl);
-        groupEl.appendChild(wrapEl);
+        groupEl.appendChild(bodyEl);
         return groupEl;
     };
 }

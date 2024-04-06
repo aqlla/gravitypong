@@ -21,28 +21,24 @@
     border: 2px solid #333;
 }
 
-.list-item > .title {
+.list-item>.title {
     margin-top: 2px;
     padding-bottom: 2px;
     font-size: 20px;
     border-bottom: 1px solid #666;
-    text-align: center;
 }
 
-.list-item > .body {
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.list-item > .content-wrapper > * {
+.list-item>.body>* {
     display: flex;
     padding: 5px;
+}
+
+.list-item>.body>.content-main {
     flex-grow: 2;
     justify-content: space-evenly;
 }
 
-.list-item > .content-wrapper > .left {
-    flex-grow: 0;
-    flex-shrink: 2;
+.list-item>.body>.left {
+    /* flex-shrink: 2; */
     border-right: 1px solid #666;
 }
