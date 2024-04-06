@@ -20,7 +20,6 @@ export const DimensionsO = {
 
 export type Dimensions = typeof DimensionsArr
 
-export type Dim2 = typeof DimensionsO[keyof typeof DimensionsO]
 export type Dim = typeof DimensionsArr[number]
 
 export type Dims<NDim extends Dim> = Take<typeof DimensionsArr, NDim>[number]

@@ -1,119 +1,97 @@
-import { NewSim as Sim } from './sim/newsim.js';
-import { GameLoop } from './sim/types.js';
-import { TODO } from './utils/types.js';
+import { HtmlAttribute, HTMLElementConfig } from './ui/dom/types.js';
+import { NewSim as Simulation } from './sim/newsim.js';
+import P5 from "p5"
 
-import P5 from "p5";
-
-
-function bindOutput(elementId: string) {
-  const el: HTMLElement | null = document.getElementById(elementId);
-  function _wrapper(target: any, _context: any) {
-      function _decorated(this: any, ...args: any[]) {
-          const result = target.call(this, ...args);
-          if (el) {
-              el.innerText = result.toString();
-          }
-      }
-  }
-}
-
-window["Simulation"] = Sim;
-
-interface GameLoopController<TGame extends GameLoop> {
-  config: {}
-  game: TGame
-}
-
-/**
- * Manages IO for the app. 
- * 
- * Figuring out how to implement this... The app is too small to justify a
- * front-end framework
- * 
- * Notes: In this project, it must:
- *  - render simulation
- *  - direct input to simulation
- *  - display, and store persistent configuration and allow input to edit 
- *    configuration values 
- */
-// class WebViewController implements GameLoopController<GravitySim> {
-//   game: GravitySim
-//   config: {} = {}
-
-//   constructor() {
-//     this.game = GravitySim.instance({ n: 1000 });
-//   }
+window["Simulation"] = Simulation;
 
 
-// }
+const $$ = document.getElementById
+const $in = (id) => document.getElementById(id) as HTMLInputElement
+
+const ruleProps = [
+    'coefficient', 'range', 'enabled']
+
+const upperIndex = (s: string, i: number) => s.replace(s[i], s[i].toUpperCase())
+const upperFirst = s => upperIndex(s, 0)
+
+const elementNotFound = (id: string): DOMException =>
+    new DOMException(`Cound not find element with id ${id}`)
 
 
-class ScratchGameViewController {
-  private game: GameLoop
-  private view: TODO
-  private config: TODO
-
-  private canvas?: TODO
-  private frameRate?: number
-  
-  // Should probably be a singleton, class is just for encapsulation/ns
-  private constructor() {
-    this.game = Sim.instance({ 
-      n: 50,
-      timeStepSeconds: 0.1,
-      bounds: [1000, window.innerWidth]
-     })
-  }
-
-  public setupCanvas(p5: P5) {
-    p5.frameRate(20);
-    p5.createCanvas(window.innerWidth, 1000);
-  }
-
-  private sketch(p5: P5) {
-    p5.background(200);
-    const c = p5.color(65);
-
-    p5.fill(c);
-
-    if (this.game) {
-      // document.getElementById("count").textContent = this.game.bodyCount;
-      // document.getElementById("framerate").textContent = s.framerate;
-        
-      // for (const b of .bodies.values()) {
-      //   p5.circle(
-      //     b.pos.x / 20 + 500, 
-      //     b.pos.y / 20 + 500, 
-      //     Math.max(2, b.r / 24));
-      // }
+const domo = {
+    make: <TElement extends HTMLElement>
+        (tag: keyof HTMLElementTagNameMap, attributes: HTMLElementConfig): TElement => {
+        const el = document.createElement(tag) as TElement
+        for (const [k, v] of Object.entries(attributes)) {
+            if (k === 'classList') {
+                el.className = v.join(" ")
+            }
+        }
+        return el
     }
-  }
-
-  public start() {
-    this.game.start();
-  }
-
-  private bindHudItems() {
-    const hudSections = {
-      // config/controls have overlap, need to think more
-      "config": {},
-      "telemetry": {},
-      "controls": {}
-    }
-  }
-
-  // Apply configuration changes to current game.
-  public updateConfiguration() {}
-  
-  // Basic I/O
-  public bindKeyPress() {}
-  public bindValueElement() {}
-  public bindInputElement() {}
+}
 
 
-  
-  private bindConfigSetting(settingKey: TODO, htmlElement: TODO) {}
-  private localStorage() {}
-
+const createConfigListItem = (parentId: string) => {
+    const parent = $$(parentId)
+    if (!parent) throw elementNotFound(parentId)
 
 }
+
+const bindRuleConfigProperties = (object: any, ruleName: string) => {
+    const ps = ruleProps.map(p => ruleName + upperFirst(p))
+    console.log(ps)
+    ps.forEach(p => bindInputToProperty(object, p, p))
+}
+
+
+const bindInputToProperty = <T, K extends keyof T>(object: T, propName: K, elementId: string) => {
+    const element = $in(elementId)
+    // element.value = object[propName] as any
+    element?.addEventListener('input', (e: Event) => {
+        const newValue = (e.target as HTMLInputElement).value
+        object[propName] = newValue as any
+        console.log("new: " + newValue)
+    })
+}
+
+
+
+export const initSim = () => {
+    const s = Simulation.instance({
+        population: 100,
+        timeStepSeconds: 0.1,
+        bounds: [window.innerWidth, window.innerHeight],
+    });
+
+    document.addEventListener("keypress", (event: KeyboardEvent) => {
+        if (event.key === " ") {
+            s.togglePause()
+        }
+    })
+
+    const item = domo.make('div', {
+        classList: ['list-item', 'flex-col']
+    })
+
+    console.log(item)
+    const cfgDiv = document.getElementById('config')! as Node
+    // cfgDiv.insertBefore(item, cfgDiv)
+    // cfgDiv.insertBefore(item, cfgDiv)
+    cfgDiv.appendChild(item)
+    cfgDiv.appendChild(item)
+    cfgDiv.appendChild(item)
+
+    window["sim"] = s
+    window["margin"] = s.margin
+
+    bindRuleConfigProperties(s, 'separation')
+    bindRuleConfigProperties(s, 'alignment')
+    bindRuleConfigProperties(s, 'cohesion')
+}
+
+document.body.onload = initSim;
+
+
+
+class InputBoundProperty { }

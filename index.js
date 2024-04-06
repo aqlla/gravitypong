@@ -1,58 +1,26 @@
-
-
 const height = window.innerHeight
 const width = window.innerWidth
-let margin = 0
-
-let s = null;
-let pause = false;
 
 let dark, red
 
-function initSim() {
-    if (!s) {
-        const Simulation = window["Simulation"];
-
-        if (Simulation) {
-            s = Simulation.instance({
-                n: 100,
-                timeStepSeconds: 0.1,
-                bounds: [width, height],
-            });
-            margin = s.margin
-            s.start();
-
-            document.addEventListener("keypress", (event) => {
-                if (event.key === " ") {
-                    s.togglePause()
-                    pause = s.running
-                }
-            }); 
-        }
-    } 
-}
+window["sim"] = window["sim"] || null
 
 function setup() {
     frameRate(20);
     createCanvas(width, height);
-    
-
     dark = color(65);
     red = color("red");
-
 }        
 
 function draw() {
-    if (!s) initSim()
-
-    if (s && s.running) {
+    if (sim) {
         background(229);
 
-        if (s.bodies) {
-            document.getElementById("count").textContent = s.bodies.size;
-            document.getElementById("framerate").textContent = s.framerate;
+        if (sim.bodies) {
+            document.getElementById("count").textContent = sim.bodies.size;
+            document.getElementById("framerate").textContent = sim.framerate;
 
-            for (const b of s.entities()) {
+            for (const b of sim.entities()) {
                 if (b.id % 20 == 0) fill(red)
                 else fill(dark)
                 circle(
@@ -62,7 +30,6 @@ function draw() {
             }
 
             noFill();
-
             rect(margin, margin, width - 2 * margin, height - 2 * margin)
         }
     }

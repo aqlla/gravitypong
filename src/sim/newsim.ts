@@ -11,24 +11,45 @@ const dimensions: NDim = 2
 
 
 export type SimArgs = SimLoopArgs & {
-    n: number
+    population: number
     bounds: Tuple<NDim>
-    timeStep?: number
+    timeStepSeconds?: number
+}
+
+
+export type ForceRuleSettings = {
+    coefficient: number
+    range: number
+    enabled: boolean
 }
 
 export class NewSim extends SimLoop {
     public readonly bodies = new Map<number, MassiveBody<NDim>>()
 
-    private bounds: Boundaries<NDim> = {min: [0, 0], max: [500, 500]}
-    private margin = 75
+    private bounds: Boundaries<NDim> = { min: [0, 0], max: [500, 500] }
+    public margin = 75
     private creationMargin = 100
-    private _oobCount: number = 0 
+    private _oobCount: number = 0
+
+
+    // configurables:
+    separationEnabled: boolean = true
+    separationFactor: number = 1.5
+    separationRange: number = 20
+
+    alignmentEnabled: boolean = true
+    alignmentRange: number = 150
+    alignmentFactor: number = 0.01
+
+    cohesionEnabled: boolean = true
+    cohesionFactor: number = .01
+    cohesionRange: number = 250
 
 
     private constructor(args: SimArgs) {
         super()
         this.bounds.max = args.bounds
-        this.makeTestBodies(args.n ?? 50)
+        this.makeTestBodies(args.population ?? 50)
     }
 
     public get canStart(): [boolean, string] {
@@ -48,7 +69,7 @@ export class NewSim extends SimLoop {
 
 
     makeTestBodies(n: number) {
-        const maxV = 100
+        const maxV = 50
         const creationBounds = this.getMarginBounds(this.creationMargin)
 
         for (let i = 0; i < n; i++) {
@@ -82,8 +103,7 @@ export class NewSim extends SimLoop {
 
     // Boids Rules
     separation(body: MassiveBody<NDim>) {
-        const separationFactor = 50
-        const visionRange = 50
+        if (!this.separationEnabled) return
 
         let accumulator = Vector2.zero as NDimVector<NDim>
 
@@ -91,22 +111,20 @@ export class NewSim extends SimLoop {
             if (b.id !== body.id) {
                 const distanceVec = body.pos.sub(b.pos)
                 const distance = distanceVec.magnitude
-                if (distance < visionRange) {
+                if (distance < this.separationRange) {
                     // accumulator = accumulator.add(b.pos)
                     accumulator = accumulator.add(distanceVec.div(distance))
                 }
             }
         }
 
-        const separationForce = accumulator.mul(separationFactor)
+        const separationForce = accumulator.mul(this.separationFactor)
         body.vel = body.vel.add(separationForce)
         return body
     }
 
     alignment(body: MassiveBody<NDim>) {
-        const alignmentFactor = 0.01
-        const visionRange = 200
-        const fov = 270
+        if (!this.alignmentEnabled) return
 
         let neighbors = 0
         let accumulator = Vector2.zero as NDimVector<NDim>
@@ -114,7 +132,7 @@ export class NewSim extends SimLoop {
         for (const b of this.entities()) {
             if (b.id !== body.id) {
                 const distance = b.pos.sub(body.pos).magnitude
-                if (distance < visionRange) {
+                if (distance < this.alignmentRange) {
                     accumulator = accumulator.add(b.vel)
                     neighbors++
                 }
@@ -123,7 +141,7 @@ export class NewSim extends SimLoop {
 
         if (neighbors) {
             const average = accumulator.div(neighbors)
-            const aligningForce = average.sub(body.vel).mul(alignmentFactor)
+            const aligningForce = average.sub(body.vel).mul(this.alignmentFactor)
             body.vel = body.vel.add(aligningForce)
         }
 
@@ -131,9 +149,7 @@ export class NewSim extends SimLoop {
     }
 
     cohesion(body: MassiveBody<NDim>) {
-        const cohesionFactor = 0.5
-        const visionRange = 250
-        const fov = 270
+        if (!this.cohesionEnabled) return
 
         let neighbors = 0
         let accumulator = Vector2.zero as NDimVector<NDim>
@@ -141,7 +157,7 @@ export class NewSim extends SimLoop {
         for (const b of this.entities()) {
             if (b.id !== body.id) {
                 const distance = b.pos.sub(body.pos).magnitude
-                if (distance < visionRange) {
+                if (distance < this.cohesionRange) {
                     accumulator = accumulator.add(b.pos)
                     neighbors++
                 }
@@ -150,7 +166,7 @@ export class NewSim extends SimLoop {
 
         if (neighbors) {
             const average = accumulator.div(neighbors)
-            const centeringForce = average.sub(body.pos).mul(cohesionFactor)
+            const centeringForce = average.sub(body.pos).mul(this.cohesionFactor)
             body.vel = body.vel.add(centeringForce)
         }
 
@@ -187,7 +203,7 @@ export class NewSim extends SimLoop {
 
         if (body.pos[1] <= 0) {
             body.pos = new NDimVector<NDim>(body.pos[0], this.bounds.max[1])
-            
+
         } else if (body.pos[1] >= this.bounds.max[1]) {
             body.pos = new NDimVector<NDim>(body.pos[0], this.bounds.min[1])
         }
@@ -209,7 +225,7 @@ export class NewSim extends SimLoop {
     private isOob(pos: NVecLike<NDim>): boolean {
         const min = this.bounds.min
         const max = this.bounds.max
-        
+
         for (let i = 0; i < dimensions; i++) {
             if (pos[i] <= min[i] || pos[i] >= max[i]) {
                 return true

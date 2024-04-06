@@ -10,10 +10,20 @@ export class NewSim extends SimLoop {
     margin = 75;
     creationMargin = 100;
     _oobCount = 0;
+    // configurables:
+    separationEnabled = true;
+    separationFactor = 1.5;
+    separationRange = 20;
+    alignmentEnabled = true;
+    alignmentRange = 150;
+    alignmentFactor = 0.01;
+    cohesionEnabled = true;
+    cohesionFactor = .01;
+    cohesionRange = 250;
     constructor(args) {
         super();
         this.bounds.max = args.bounds;
-        this.makeTestBodies(args.n ?? 50);
+        this.makeTestBodies(args.population ?? 50);
     }
     get canStart() {
         switch (true) {
@@ -29,7 +39,7 @@ export class NewSim extends SimLoop {
         return NewSim._instance;
     }
     makeTestBodies(n) {
-        const maxV = 100;
+        const maxV = 50;
         const creationBounds = this.getMarginBounds(this.creationMargin);
         for (let i = 0; i < n; i++) {
             this.addBody(new MassiveBody({
@@ -58,33 +68,32 @@ export class NewSim extends SimLoop {
     }
     // Boids Rules
     separation(body) {
-        const separationFactor = 50;
-        const visionRange = 50;
+        if (!this.separationEnabled)
+            return;
         let accumulator = Vector2.zero;
         for (const b of this.entities()) {
             if (b.id !== body.id) {
                 const distanceVec = body.pos.sub(b.pos);
                 const distance = distanceVec.magnitude;
-                if (distance < visionRange) {
+                if (distance < this.separationRange) {
                     // accumulator = accumulator.add(b.pos)
                     accumulator = accumulator.add(distanceVec.div(distance));
                 }
             }
         }
-        const separationForce = accumulator.mul(separationFactor);
+        const separationForce = accumulator.mul(this.separationFactor);
         body.vel = body.vel.add(separationForce);
         return body;
     }
     alignment(body) {
-        const alignmentFactor = 0.01;
-        const visionRange = 200;
-        const fov = 270;
+        if (!this.alignmentEnabled)
+            return;
         let neighbors = 0;
         let accumulator = Vector2.zero;
         for (const b of this.entities()) {
             if (b.id !== body.id) {
                 const distance = b.pos.sub(body.pos).magnitude;
-                if (distance < visionRange) {
+                if (distance < this.alignmentRange) {
                     accumulator = accumulator.add(b.vel);
                     neighbors++;
                 }
@@ -92,21 +101,21 @@ export class NewSim extends SimLoop {
         }
         if (neighbors) {
             const average = accumulator.div(neighbors);
-            const aligningForce = average.sub(body.vel).mul(alignmentFactor);
+            const aligningForce = average.sub(body.vel).mul(this.alignmentFactor);
             body.vel = body.vel.add(aligningForce);
         }
         return body;
     }
     cohesion(body) {
-        const cohesionFactor = 0.5;
-        const visionRange = 250;
+        if (!this.cohesionEnabled)
+            return;
         const fov = 270;
         let neighbors = 0;
         let accumulator = Vector2.zero;
         for (const b of this.entities()) {
             if (b.id !== body.id) {
                 const distance = b.pos.sub(body.pos).magnitude;
-                if (distance < visionRange) {
+                if (distance < this.cohesionRange) {
                     accumulator = accumulator.add(b.pos);
                     neighbors++;
                 }
@@ -114,7 +123,7 @@ export class NewSim extends SimLoop {
         }
         if (neighbors) {
             const average = accumulator.div(neighbors);
-            const centeringForce = average.sub(body.pos).mul(cohesionFactor);
+            const centeringForce = average.sub(body.pos).mul(this.cohesionFactor);
             body.vel = body.vel.add(centeringForce);
         }
         return body;
