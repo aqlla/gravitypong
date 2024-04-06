@@ -152,7 +152,10 @@ export class Simulation extends SimLoop {
         }
     }
 
-    private getCollisionWith(collisions: SimulationBody<NDim>[][], b1: SimulationBody<NDim>, b2: SimulationBody<NDim>): SimulationBody<NDim>[] | null {
+    private getCollisionWith(
+            collisions: SimulationBody<NDim>[][], 
+            b1: SimulationBody<NDim>, 
+            b2: SimulationBody<NDim>): SimulationBody<NDim>[] | null {
         for (const c of collisions) {
             for (const b of c) {
                 if (b.eq(b1) || b.eq(b2)) {

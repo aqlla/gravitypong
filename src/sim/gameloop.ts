@@ -28,7 +28,8 @@ type SimpleRuleSettings = {
     range: number
 }
 
-type BoidsSimSettings<NDim extends Dims<3>> = KineticSimSettings<NDim> & BoundedSimSettings<NDim> & {
+type BoidsSimSettings<NDim extends Dims<3>>
+        = KineticSimSettings<NDim> & BoundedSimSettings<NDim> & {
     speedLimit?: number
     separationFactor?: number
     alignmentFactor?: number

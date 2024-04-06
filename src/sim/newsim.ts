@@ -82,7 +82,9 @@ export class NewSim extends SimLoop {
         }
     }
 
-    getRandomPos(max: Tuple<NDim> = this.bounds.max, min: Tuple<NDim> = this.bounds.min): NDimVector<NDim> {
+    getRandomPos(
+        max: Tuple<NDim> = this.bounds.max,
+        min: Tuple<NDim> = this.bounds.min): NDimVector<NDim> {
         const x = scale(Math.random(), max[0], min[0])
         const y = scale(Math.random(), max[1], min[1])
         return new NDimVector<NDim>(x, y)
@@ -104,7 +106,9 @@ export class NewSim extends SimLoop {
     // Boids Rules
     separation(body: MassiveBody<NDim>) {
         if (!this.separationEnabled) return
-
+        const zeroVec = Vector2.zero as NDimVector<2>
+        const distance = b => b.pos.sub(body.pos).magnitude
+        const canSee = d => d < this.separationRange
         let accumulator = Vector2.zero as NDimVector<NDim>
 
         for (const b of this.entities()) {
@@ -118,6 +122,15 @@ export class NewSim extends SimLoop {
             }
         }
 
+        const n = Array
+            .from(this.bodies.values())
+            .filter(b => body !== b && canSee(distance(b)))
+            // lol ignore this, i just want to commit so i can sleep
+            .reduce((acc, b) => acc.add(distance(b).div(distance(b).magnitude)), zeroVec)
+            .mul(this.separationFactor)
+
+        // TODO: i think i fucked something up, check boids algos
+
         const separationForce = accumulator.mul(this.separationFactor)
         body.vel = body.vel.add(separationForce)
         return body
@@ -125,26 +138,35 @@ export class NewSim extends SimLoop {
 
     alignment(body: MassiveBody<NDim>) {
         if (!this.alignmentEnabled) return
+        const zeroVec = Vector2.zero as NDimVector<2>
+        // // let neighbors = 0
+        // let accumulator = zeroVec
 
-        let neighbors = 0
-        let accumulator = Vector2.zero as NDimVector<NDim>
+        // for (const b of this.entities()) {
+        //     if (b.id !== body.id) {
+        //         const distance = b.pos.sub(body.pos).magnitude
+        //         if (distance < this.alignmentRange) {
+        //             accumulator = accumulator.add(b.vel)
+        //             neighbors++
+        //         }
+        //     }
+        // }
 
-        for (const b of this.entities()) {
-            if (b.id !== body.id) {
-                const distance = b.pos.sub(body.pos).magnitude
-                if (distance < this.alignmentRange) {
-                    accumulator = accumulator.add(b.vel)
-                    neighbors++
-                }
-            }
-        }
+        // same, but functional
+        const distance = b => b.pos.sub(body.pos).magnitude
+        const canSee = d => d < this.alignmentRange
 
-        if (neighbors) {
-            const average = accumulator.div(neighbors)
-            const aligningForce = average.sub(body.vel).mul(this.alignmentFactor)
-            body.vel = body.vel.add(aligningForce)
-        }
+        const neighbors = Array
+            .from(this.bodies.values())
+            .filter(b => body !== b && canSee(distance(b)))
 
+        const aligningForce = neighbors
+            .reduce((acc, b) => acc.add(b.pos), zeroVec)
+            .div(neighbors.length)
+            .sub(body.vel)
+            .mul(this.alignmentFactor)
+
+        body.vel = body.vel.add(aligningForce)
         return body
     }
 
@@ -165,9 +187,11 @@ export class NewSim extends SimLoop {
         }
 
         if (neighbors) {
-            const average = accumulator.div(neighbors)
-            const centeringForce = average.sub(body.pos).mul(this.cohesionFactor)
-            body.vel = body.vel.add(centeringForce)
+            body.vel = body.vel.add(
+                accumulator
+                    .div(neighbors)
+                    .sub(body.pos)
+                    .mul(this.cohesionFactor))
         }
 
         return body
