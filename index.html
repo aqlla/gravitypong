@@ -24,34 +24,24 @@
                 <div id="config" class="config flex-col">
                     <div class="list-item flex-col">
                         <div class="title">Telemetry</div>
-                        <div id="telemetry" class="hud-section flex-col content">
-                            <ul>Count: <span id="count" data-bind-sim-property="count"></span></ul>
+                        <div id="telemetry" class="hud-section flex-col content-wrapper">
+                            <ul>Count: <span id="count"></span></ul>
                             <ul>FPS: <span id="framerate"></span></ul>
                         </div>
                     </div>
 
                     <div class="flex-col list-item">
                         <div class="title">Boid Separation</div>
-                        <div class="content flex-row">
+                        <div class="content-wrapper flex-row">
                             <div class="left flex-col">
-
-                                <div class="toggle flex-col">
-                                    Enable<input id="separationEnabled" type="checkbox">
-                                </div>
+                                Enable<input name="separation-toggle" id="separationEnabled" type="checkbox">
                             </div>
 
-                            <div class="flex-col">
-                                <div class="slider flex-col">
-                                    Factor
-                                    <input id="separationFactor" type="range" min="0.01" max="5" value="1"
-                                        class="slider">
-                                </div>
-
-                                <div class="slider flex-col">
-                                    View Distance
-                                    <input id="separationRange" type="range" min="20" max="500" value="20"
-                                        class="slider">
-                                </div>
+                            <div class="flex-col content-main">
+                                Factor<input name="separation-factor" id="separationFactor" type="range" min="0.01" max="5"
+                                    value="0.1" class="slider">
+                                View Distance<input name=separation-range id=separationRange type=range min=0 max=300 value=20
+                                    class=slider>
                             </div>
                         </div>
                     </div>
@@ -70,7 +60,8 @@
                             <div class="flex-col">
                                 <div class="slider flex-col">
                                     Factor
-                                    <input id="cohesionFactor" type="range" min="0.01" max="5" value="50" class="slider">
+                                    <input id="cohesionFactor" type="range" min="0.01" max="5" value="50"
+                                        class="slider">
                                 </div>
 
                                 <div class="slider flex-col">

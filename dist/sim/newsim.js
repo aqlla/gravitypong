@@ -56,7 +56,7 @@ export class NewSim extends SimLoop {
         return new NDimVector(x, y);
     }
     updatePhysics(dt) {
-        for (const [id, body] of this.bodies.entries()) {
+        for (const [_, body] of this.bodies.entries()) {
             this.repulsiveBoundaries(body);
             this.separation(body);
             this.cohesion(body);
@@ -109,7 +109,6 @@ export class NewSim extends SimLoop {
     cohesion(body) {
         if (!this.cohesionEnabled)
             return;
-        const fov = 270;
         let neighbors = 0;
         let accumulator = Vector2.zero;
         for (const b of this.entities()) {

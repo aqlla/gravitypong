@@ -13,7 +13,7 @@ const domo = {
         const el = document.createElement(tag);
         for (const [k, v] of Object.entries(attributes)) {
             if (k === 'classList') {
-                el.className = v.join(" ");
+                el.className = v;
             }
         }
         return el;
@@ -38,6 +38,38 @@ const bindInputToProperty = (object, propName, elementId) => {
         console.log("new: " + newValue);
     });
 };
+class ConfigGroup extends HTMLElement {
+    static classNames = {
+        group: 'config-group list-item flex-col',
+        title: 'title',
+        wrapper: 'content-wrapper flex-row',
+        left: 'left flex-col',
+        content: 'content-main flex-col',
+        input: 'input flex-col',
+    };
+    addAllConfigGroups_doStuff() {
+        const parent = this.getParent('config');
+        const sepGroup = this.makeBoidsForceConfigGroup('separation');
+        parent.appendChild(sepGroup);
+    }
+    getParent(parentId) {
+        return document.getElementById(parentId);
+    }
+    makeBoidsForceConfigGroup = (force) => {
+        const group = this.makeConfigGroup(force);
+        const wrapper = group.querySelector('.content-wrapper');
+        return group;
+    };
+    makeConfigGroup = (title) => {
+        const groupEl = domo.make('div', { class: ConfigGroup.classNames['group'] });
+        const titleEl = domo.make('div', { class: ConfigGroup.classNames['title'] });
+        const wrapEl = domo.make('div', { class: ConfigGroup.classNames['wrapper'] });
+        titleEl.innerText = title;
+        groupEl.appendChild(titleEl);
+        groupEl.appendChild(wrapEl);
+        return groupEl;
+    };
+}
 export const initSim = () => {
     const s = Simulation.instance({
         population: 100,
@@ -49,16 +81,6 @@ export const initSim = () => {
             s.togglePause();
         }
     });
-    const item = domo.make('div', {
-        classList: ['list-item', 'flex-col']
-    });
-    console.log(item);
-    const cfgDiv = document.getElementById('config');
-    // cfgDiv.insertBefore(item, cfgDiv)
-    // cfgDiv.insertBefore(item, cfgDiv)
-    cfgDiv.appendChild(item);
-    cfgDiv.appendChild(item);
-    cfgDiv.appendChild(item);
     window["sim"] = s;
     window["margin"] = s.margin;
     bindRuleConfigProperties(s, 'separation');

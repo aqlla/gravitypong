@@ -186,8 +186,8 @@ export type HTMLElementConfig = Partial<{
 
 
 
-// export type HtmlAttributeConfig = {
-//     [K in HtmlAttribute]?: string
-// }
+export type HtmlAttributeConfig = {
+    [K in HtmlAttribute]?: string
+}
 
 

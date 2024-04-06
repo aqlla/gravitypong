@@ -89,7 +89,7 @@ export class NewSim extends SimLoop {
     }
 
     public updatePhysics(dt: number): void {
-        for (const [id, body] of this.bodies.entries()) {
+        for (const [_, body] of this.bodies.entries()) {
             this.repulsiveBoundaries(body)
             this.separation(body)
             this.cohesion(body)
@@ -187,7 +187,7 @@ export class NewSim extends SimLoop {
     }
 
     speedLimit(body: MassiveBody<NDim>) {
-        const maxSpeed = 120
+        const maxSpeed = 150
         const speed = body.vel.magnitude
         if (speed > maxSpeed)
             body.vel = body.vel.div(speed).mul(maxSpeed)

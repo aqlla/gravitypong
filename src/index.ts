@@ -1,6 +1,7 @@
-import { HtmlAttribute, HTMLElementConfig } from './ui/dom/types.js';
+import { HtmlAttribute, HtmlAttributeConfig } from './ui/dom/types.js';
 import { NewSim as Simulation } from './sim/newsim.js';
 import P5 from "p5"
+import { group } from 'console';
 
 window["Simulation"] = Simulation;
 
@@ -20,11 +21,11 @@ const elementNotFound = (id: string): DOMException =>
 
 const domo = {
     make: <TElement extends HTMLElement>
-        (tag: keyof HTMLElementTagNameMap, attributes: HTMLElementConfig): TElement => {
+        (tag: keyof HTMLElementTagNameMap, attributes: HtmlAttributeConfig): TElement => {
         const el = document.createElement(tag) as TElement
         for (const [k, v] of Object.entries(attributes)) {
             if (k === 'classList') {
-                el.className = v.join(" ")
+                el.className = v
             }
         }
         return el
@@ -56,6 +57,43 @@ const bindInputToProperty = <T, K extends keyof T>(object: T, propName: K, eleme
 }
 
 
+class FuConfigGroup extends HTMLElement {
+    static classNames = {
+        group: 'config-group list-item flex-col',
+        title: 'title',
+        body: 'body flex-row',
+        left: 'left flex-col',
+        content: 'content-main flex-col',
+        input: 'input flex-col',
+    }
+
+    addAllConfigGroups_doStuff() {
+        const parent = this.getParent('config')
+        const sepGroup = this.makeBoidsForceConfigGroup('separation')
+        parent.appendChild(sepGroup)
+    }
+
+    getParent(parentId) {
+        return document.getElementById(parentId)! as Node
+    }
+
+    makeBoidsForceConfigGroup = (force: string) => {
+        const group = this.makeConfigGroup(force)
+        const body = group.querySelector('.body')
+        return group
+    }
+
+    makeConfigGroup = (title: string) => {
+        const groupEl = domo.make('div', { class: FuConfigGroup.classNames['group'] })
+        const titleEl = domo.make('div', { class: FuConfigGroup.classNames['title'] })
+        const bodyEl = domo.make('div', { class: FuConfigGroup.classNames['body'] })
+        titleEl.innerText = title
+        groupEl.appendChild(titleEl)
+        groupEl.appendChild(bodyEl)
+        return groupEl
+    }
+}
+
 
 export const initSim = () => {
     const s = Simulation.instance({
@@ -69,18 +107,6 @@ export const initSim = () => {
             s.togglePause()
         }
     })
-
-    const item = domo.make('div', {
-        classList: ['list-item', 'flex-col']
-    })
-
-    console.log(item)
-    const cfgDiv = document.getElementById('config')! as Node
-    // cfgDiv.insertBefore(item, cfgDiv)
-    // cfgDiv.insertBefore(item, cfgDiv)
-    cfgDiv.appendChild(item)
-    cfgDiv.appendChild(item)
-    cfgDiv.appendChild(item)
 
     window["sim"] = s
     window["margin"] = s.margin

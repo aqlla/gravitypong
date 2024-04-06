@@ -30,10 +30,6 @@ export class NDimVector {
         Object.defineProperties(proxied, Object.getOwnPropertyDescriptors(this.mappedComponents));
         return proxied;
     }
-    // public static make<N extends Dim>(...components: NVecLike<N>): 
-    //         InstanceType<typeof NDimVector<N>> & NDimVectorComponents<N> {
-    //     return new NDimVector<N>(...components) as NDimVectorComponents<N> & InstanceType<typeof NDimVector<N>>
-    // } 
     /**
      * Retrieves a specific item (component) from the vector by its index.
      *

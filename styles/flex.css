@@ -29,19 +29,19 @@
     text-align: center;
 }
 
-.list-item > .content {
+.list-item > .body {
     display: flex;
     justify-content: space-evenly;
 }
 
-.list-item > .content > * {
+.list-item > .content-wrapper > * {
     display: flex;
     padding: 5px;
     flex-grow: 2;
     justify-content: space-evenly;
 }
 
-.list-item > .content > .left {
+.list-item > .content-wrapper > .left {
     flex-grow: 0;
     flex-shrink: 2;
     border-right: 1px solid #666;

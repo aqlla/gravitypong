@@ -173,6 +173,3 @@ export const HtmlAttributes = [
     "width",
     "wrap"
 ];
-// export type HtmlAttributeConfig = {
-//     [K in HtmlAttribute]?: string
-// }
